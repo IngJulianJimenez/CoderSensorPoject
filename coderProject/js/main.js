@@ -54,7 +54,7 @@ function showDevicesByUser(_user) {
  * comparar si el valor de la propiedad es igual al user que hace login userOwner == _user y el serial;
  * concatenar el resultado en una arreglo vacio resultArray;
  * si el arreglo resultante es  mayor a 0
- * se sobre escribe el arreglo original devices y se borra el objeto con el serial a consultar
+ * se borra el objeto con el serial a consultar del array con devices.filter, adicional se sobre escribe el array original
  */
 function deleteDevicesByUser(_user, _deleteSerial) {
   let userDevice;
@@ -81,8 +81,9 @@ function deleteDevicesByUser(_user, _deleteSerial) {
     return resultArray;
   } else {
     devices = devices.filter((devices) => devices.serial != _deleteSerial);
-    return resultArray;
     //console.log(devices);
+    return resultArray;
+    
   }
 }
 
@@ -183,7 +184,8 @@ if (
         // funcion clasica
         /**
          * se recorre el arreglo de objetos respuesta de la funcion con un for;
-         * se muestras un mensaje si se borro el dispositivo
+         * se muestra un mensaje si se borro el dispositivo
+         * el valor de retorno solo es para determinar si es vacio o con datos el array 
          */
         let _showDeleteDevicesByUser;
 
