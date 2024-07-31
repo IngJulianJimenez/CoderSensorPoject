@@ -1,7 +1,4 @@
 console.log("inicio");
-/**
- * ingreso credenciales
- */
 
 let devices = [
   { owner: "usera", serial: "AB12", description: "arriba", estate: "off" },
@@ -45,8 +42,8 @@ function showDevicesByUser(_user) {
 }
 /**
  * funcion clasica
- * @param {*} _user 
- * @param {*} _deleteSerial 
+ * @param {*} _user
+ * @param {*} _deleteSerial
  * @returns resultArray
  * se recorre el arreglo de objetos devices con un for;
  * el resultado se guarda en userDevice;
@@ -83,9 +80,28 @@ function deleteDevicesByUser(_user, _deleteSerial) {
     devices = devices.filter((devices) => devices.serial != _deleteSerial);
     //console.log(devices);
     return resultArray;
-    
   }
 }
+
+/**
+ * clase constructor de un objeto
+ * @param {*} _usuario que hace login
+ * @param {*} _serial
+ * @param {*} _description
+ * @param {*} _al agregar es off
+ */
+class addDevices {
+  constructor(_owner, _serial, _description, _estate) {
+    this.owner = _owner;
+    this.serial = _serial;
+    this.description = _description;
+    this.estate = _estate;
+  }
+}
+
+/**************************************************
+ *               ingreso credenciales
+ *************************************************/
 
 let user = prompt("ingrese usuario: ");
 let passWord = prompt("ingrese contraseña: ");
@@ -123,27 +139,16 @@ if (
         let serial = prompt("ingrese el serial del dipositivo: ");
         let description = prompt("ingrese una descripcion ");
 
-        /**
-         * constructor de un objeto
-         * @param {*} _usuario que hace login
-         * @param {*} _serial
-         * @param {*} _description
-         * @param {*} _al agregar es off
-         */
-        function addDevices(_owner, _serial, _description, _estate) {
-          this.owner = _owner;
-          this.serial = _serial;
-          this.description = _description;
-          this.estate = _estate;
-        }
-
-        //instanciar
+        //instanciar objeto y agregar objeto
+        /** 
         const newDevice = new addDevices(user, serial, description, state);
         devices.push(newDevice);
-        console.log(
-          "dispositivo agregado consulte desde el menu de opciones: " +
-            newDevice
-        );
+        console.log("dispositivo agregado consulte desde el menu de opciones: " + newDevice);
+        alert("dispositivo agregado consulte desde el menu de opciones");
+        */
+       //otra forma de agregar mas pro 
+        devices.push(new addDevices(user, serial, description, state)); 
+        console.log("dispositivo agregado consulte desde el menu de opciones: ");
         alert("dispositivo agregado consulte desde el menu de opciones");
         break;
 
@@ -185,7 +190,7 @@ if (
         /**
          * se recorre el arreglo de objetos respuesta de la funcion con un for;
          * se muestra un mensaje si se borro el dispositivo
-         * el valor de retorno solo es para determinar si es vacio o con datos el array 
+         * el valor de retorno solo es para determinar si es vacio o con datos el array
          */
         let _showDeleteDevicesByUser;
 
