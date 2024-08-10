@@ -42,3 +42,15 @@ serial:
 >AB78
 
 >AB34
+
+# Alcance segunda entrega:
+
+- uso de funciones para crear, borrar, actualizar y mostrar dispositivos.
+
+- Función para generar fecha y números aleatorios.
+
+- Función para recorrer el array actualizar o eliminar atributos de un objeto.
+
+- Implementar clases para crear nuevos objetos.
+
+- Varaibles locales y variables globales.

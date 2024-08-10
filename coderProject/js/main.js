@@ -261,25 +261,6 @@ let lastArrayShow;
 user = prompt("ingrese usuario: ");
 passWord = prompt("ingrese contraseña: ");
 
-  /******************************************************************************
- * inicio  DOM
- ******************************************************************************/
-  let frNameHour = document.getElementsByTagName("footer");
-  let frText_1 = document.createElement("p");
-  frText_1.innerHTML =
-    "Creado por Julian Jimenez | Bogota Colombia <b>CoderHouse</b> 2024 | Hora Local: " +
-    userDate();
-    frNameHour[0].append(frText_1);
-  
-  let frUser = document.getElementById("user");
-  let frText_2 = document.createElement("p");
-  frText_2.innerHTML = 
-  `
-  Bienvenido!: <b>${user}</b> 
-  `;
-  frUser.append(frText_2);
-
-
 if (userExist(user, passWord) == true) {
   alert("Bienvenido.. ! " + user);
   console.log("Welcome.. " + user);
