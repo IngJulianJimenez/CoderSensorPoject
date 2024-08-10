@@ -4,7 +4,7 @@
  * @param {*} _password
  * @returns true
  * ingresar credenciales
- * se usa el for  of para recorrer el array users 
+ * el for of recorre el array users
  * se compara cada objeto con el _user y  _password
  * si existe true
  * si no existe false
@@ -16,7 +16,7 @@ function userExist(_user, _password) {
     //console.log(x);
     ownerUser = x.owner;
     passwordUser = x.password;
-    console.log(ownerUser);
+    //console.log(ownerUser);
 
     if (ownerUser == _user && passwordUser == _password) {
       return true;
@@ -31,7 +31,7 @@ function userExist(_user, _password) {
  * @param {*} _numberSerial
  * @returns resultArray
  * se recorre el arreglo de objetos devices con un for;
- * el objeto completo y sustributos se guardan en userDevice, por cada ciclo del for;
+ * el objeto completo y sus atributos se guardan en userDevice, por cada ciclo del for;
  * se accede al la propiedad del objeto en cada ciclo del for[index], con userOwner=userDevice.owner y userSerial = userDevice.serial ;
  * comparar si el valor de user que hace login y el serial hacen match en el array devices con userOwner == _user y el serial;
  * si la comparacion es valida exist = true;
@@ -72,17 +72,28 @@ const deleteDeviceByUser = function (_numberSerial) {
   devices = devices.filter((devices) => devices.serial != _numberSerial);
 };
 
-//actulizar
+/**
+ *
+ * @param {*} _user
+ * @param {*} _numberSerial
+ * @param {*} _description
+ * @param {*} _state
+ * @param {*} userDate()
+ * actulizar dispositivo:
+ * description
+ * state
+ * userDate() actualizar fecha
+ */
 const updateDeviceByUser = function (
   _user,
   _numberSerial,
   _description,
-  _state
+  _state,
+  _funcion
 ) {
   let userDevice;
   let userOwner;
   let userSerial;
-  let exist = false;
 
   for (let index = 0; index < devices.length; index++) {
     userDevice = devices[index];
@@ -91,6 +102,7 @@ const updateDeviceByUser = function (
     userSerial = userDevice.serial;
 
     if (userOwner == _user && userSerial == _numberSerial) {
+      userDevice.date = _funcion; //actualizar fecha
       userDevice.description = _description;
       userDevice.estate = _state;
     }
@@ -106,7 +118,7 @@ const updateDeviceByUser = function (
  * se accede al la propiedad del objeto en cada ciclo del for con userOwner=userDevice.owner;
  * comparar si el valor de la propiedad es igual al user que hace login userOwner == _user;
  * concatenar el resultado en una arreglo vacio resultArray;
- *
+ * fnGeneradorNumeros() genera un numero aleatorio  para simular la tempertura
  */
 function showDevicesByUser(_user) {
   let userDevice;
@@ -122,6 +134,8 @@ function showDevicesByUser(_user) {
     //console.log("x:"+userOwner);
 
     if (userOwner == _user) {
+      userDevice.temp = fnGeneradorNumeros();
+      //console.log(userDevice.temp);
       //console.log(userDevice);
       resultArray.push(userDevice);
     }
@@ -145,6 +159,24 @@ class addDevices {
     this.estate = _estate;
   }
 }
+
+//funcion generador numeros
+const fnGeneradorNumeros = () => {
+  return (Math.random() * 100).toFixed(2);
+};
+
+//funcion gnereador de la fecha actual
+let userDate = function () {
+  let d = new Date();
+
+  let yy = d.getFullYear();
+  let mm = d.getMonth();
+  let dd = d.getDay();
+  let hh = d.getHours();
+  let mn = d.getMinutes();
+  let ss = d.getSeconds();
+  return yy + "/" + mm + "/" + dd + " " + hh + ":" + mn + ":" + ss;
+};
 
 /******************************************************************************
  * declaracion de varaibles
@@ -229,6 +261,25 @@ let lastArrayShow;
 user = prompt("ingrese usuario: ");
 passWord = prompt("ingrese contraseña: ");
 
+  /******************************************************************************
+ * inicio  DOM
+ ******************************************************************************/
+  let frNameHour = document.getElementsByTagName("footer");
+  let frText_1 = document.createElement("p");
+  frText_1.innerHTML =
+    "Creado por Julian Jimenez | Bogota Colombia <b>CoderHouse</b> 2024 | Hora Local: " +
+    userDate();
+    frNameHour[0].append(frText_1);
+  
+  let frUser = document.getElementById("user");
+  let frText_2 = document.createElement("p");
+  frText_2.innerHTML = 
+  `
+  Bienvenido!: <b>${user}</b> 
+  `;
+  frUser.append(frText_2);
+
+
 if (userExist(user, passWord) == true) {
   alert("Bienvenido.. ! " + user);
   console.log("Welcome.. " + user);
@@ -287,7 +338,7 @@ if (userExist(user, passWord) == true) {
           console.log("usted no cuenta con dispositivos");
           alert("usted no cuenta con dispositivos");
         } else {
-          _showDevicesByUser.forEach(element => {
+          _showDevicesByUser.forEach((element) => {
             lastArrayShow = element;
             console.log(lastArrayShow);
           });
@@ -309,7 +360,14 @@ if (userExist(user, passWord) == true) {
         } else {
           description = prompt("ingrese una descripcion ");
           state = prompt("ingrese un estado valido on / off");
-          updateDeviceByUser(user, numberSerial, description, state);
+
+          updateDeviceByUser(
+            user,
+            numberSerial,
+            description,
+            state,
+            userDate()
+          ); // enviar fecha
           alert("actualizando ...");
           console.log("actualizando ...");
         }
