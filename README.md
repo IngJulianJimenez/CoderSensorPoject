@@ -53,4 +53,5 @@ serial:
 
 - Implementar clases para crear nuevos objetos.
 
-- Varaibles locales y variables globales.
+- Varaibles locales y variables globales .
+
