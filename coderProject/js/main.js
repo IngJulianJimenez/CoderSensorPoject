@@ -240,6 +240,16 @@ let devices = [
   },
 ];
 
+const options = [
+  "<b>Seleccione una opción del menú: </b>",
+  "1 para ingresar nuevo dispositivo",
+  "2 mostrar dispositivos",
+  "3 actulizar",
+  "4 borrar",
+  "5 para salir",
+  "<form id='formulario'><input type='text'><input type='submit' value='Send' class='button-grey'> </form>",
+];
+
 let user;
 let passWord;
 let option;
@@ -261,155 +271,47 @@ let lastArrayShow;
 user = prompt("ingrese usuario: ");
 passWord = prompt("ingrese contraseña: ");
 
+if (userExist(user, passWord) == true) {
+  alert("Bienvenido.. ! " + user);
+
   /******************************************************************************
- * inicio  DOM
- ******************************************************************************/
+   * DOM
+   * mostrar en el front
+   * mensaje de bienvenida mas la funcion userDate()
+   * usuario que hace login
+   * array menu de opciones
+   ******************************************************************************/
   let frNameHour = document.getElementsByTagName("footer");
   let frText_1 = document.createElement("p");
   frText_1.innerHTML =
     "Creado por Julian Jimenez | Bogota Colombia <b>CoderHouse</b> 2024 | Hora Local: " +
     userDate();
-    frNameHour[0].append(frText_1);
-  
+  frNameHour[0].append(frText_1);
+
   let frUser = document.getElementById("user");
   let frText_2 = document.createElement("p");
-  frText_2.innerHTML = 
-  `
-  Bienvenido!: <b>${user}</b> 
+  frText_2.innerHTML = `
+  Bienvenido!: <b>${user.toUpperCase()}</b> 
   `;
   frUser.append(frText_2);
 
+  let frMenuOption = document.getElementById("MenuOption");
+  for (const op of options) {
+    let ul = document.createElement("ul");
+    ul.innerHTML = `<li class="list-group-item">${op}</li>`;
+    frMenuOption.append(ul);
+  }
 
-if (userExist(user, passWord) == true) {
-  alert("Bienvenido.. ! " + user);
-  console.log("Welcome.. " + user);
+  let formulario = document.querySelector("#formulario");
+  formulario.addEventListener("submit", (e) => {
+    e.preventDefault();
+    //console.log("formualrio Enviado");
+    let form = e.target;
+    //console.log("el valor selecionado es: "+form.children[0].value);
+    //mostrar
+    document.getElementById("resultado").innerHTML = form.children[0].value;
+  });
 
-  /******************************************************************************
-   * bucle menu de opciones
-   ******************************************************************************/
-  do {
-    option = parseInt(
-      prompt(
-        "\nSeleccione numero: \n1 para ingresar nuevo dispositivo\n2 mostrar dispositivos\n3 actulizar\n4 borrar\n5 para salir"
-      )
-    );
-    console.log(
-      "\nSeleccione numero: \n1 para ingresar nuevo dispositivo\n2 mostrar dispositivos\n3 actulizar\n4 borrar\n5 para salir"
-    );
-
-    switch (option) {
-      case 1:
-        /******************************************************************************
-         * agregar un nuevo dispositivo
-         * definir un objeto
-         * agregarlo al arreglo de objetos devices,con devices.push(newDevice);
-         ******************************************************************************/
-        serial = prompt("ingrese el serial del dipositivo: ");
-        description = prompt("ingrese una descripcion ");
-
-        //instanciar objeto y agregar objeto
-        /** 
-        const newDevice = new addDevices(user, serial, description, state);
-        devices.push(newDevice);
-        console.log("dispositivo agregado consulte desde el menu de opciones: " + newDevice);
-        alert("dispositivo agregado consulte desde el menu de opciones");
-        */
-        //otra forma de agregar mas pro
-        devices.push(new addDevices(user, serial, description, state));
-        console.log(
-          "dispositivo agregado consulte desde el menu de opciones: "
-        );
-        alert("dispositivo agregado consulte desde el menu de opciones");
-        break;
-
-      case 2:
-        // funcion clasica
-        /******************************************************************************
-         * mostrar dispositivos
-         * se recorre el arreglo de objetos respuesta de la funcion con un for;
-         * el resultado se muestra en pantalla
-         ******************************************************************************/
-        _showDevicesByUser;
-        lastArrayShow;
-
-        _showDevicesByUser = showDevicesByUser(user);
-
-        if (_showDevicesByUser <= 0) {
-          console.log("usted no cuenta con dispositivos");
-          alert("usted no cuenta con dispositivos");
-        } else {
-          _showDevicesByUser.forEach((element) => {
-            lastArrayShow = element;
-            console.log(lastArrayShow);
-          });
-        }
-        break;
-
-      case 3:
-        /******************************************************************************
-         * Actulizar
-         ******************************************************************************/
-        console.log("ingrese el serial del dipositivo a actulizar: ");
-        numberSerial = prompt("ingrese el serial del dipositivo a actulizar: ");
-
-        _showsearchDevicesByUser = searchDevicesByUser(user, numberSerial);
-
-        if (_showsearchDevicesByUser != true) {
-          console.log("por favor, verifique el serial");
-          alert("por favor, verifique el serial");
-        } else {
-          description = prompt("ingrese una descripcion ");
-          state = prompt("ingrese un estado valido on / off");
-
-          updateDeviceByUser(
-            user,
-            numberSerial,
-            description,
-            state,
-            userDate()
-          ); // enviar fecha
-          alert("actualizando ...");
-          console.log("actualizando ...");
-        }
-        break;
-
-      case 4:
-        /******************************************************************************
-         * Eliminar
-         ******************************************************************************/
-        console.log("ingrese el serial del dipositivo a eliminar: ");
-        numberSerial = prompt("ingrese el serial del dipositivo a eliminar: ");
-
-        // funcion clasica
-        /**
-         * se recorre el arreglo de objetos respuesta de la funcion con un for;
-         * se muestra un mensaje si se borro el dispositivo
-         * el valor de retorno solo es para determinar si hace match el serial y el usuario
-         */
-
-        _showsearchDevicesByUser = searchDevicesByUser(user, numberSerial);
-        if (_showsearchDevicesByUser != true) {
-          console.log("ha ocurrido un error, verifique el serial a borrar");
-          alert("ha ocurrido un error, verifique el serial a borrar");
-        } else {
-          deleteDeviceByUser(numberSerial);
-          console.log(
-            "dispositivo eliminado, verifique la lista de dipositivos"
-          );
-          alert("dispositivo eliminado, verifique la lista de dipositivos");
-        }
-        break;
-
-      case 5:
-        alert("Hasta pronto..");
-        console.log("Hasta pronto..");
-        break;
-      default:
-        alert("ingrese una opcion correcta");
-        break;
-    }
-  } while (option < 5);
 } else {
   alert("Please verify your credentials");
-  console.log("Please verify your credentials");
 }
