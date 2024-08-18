@@ -169,9 +169,12 @@ const fnGeneradorNumeros = () => {
 let userDate = function () {
   let d = new Date();
 
+  console.log(d);
+  console.log(d.getDay());
+
   let yy = d.getFullYear();
-  let mm = d.getMonth();
-  let dd = d.getDay();
+  let mm = d.getMonth() + 1;
+  let dd = d.getDate();
   let hh = d.getHours();
   let mn = d.getMinutes();
   let ss = d.getSeconds();
@@ -198,6 +201,18 @@ function UserMenu() {
   });
 }
 
+
+/**
+ * fucncion para limpiar la tabla
+ */
+function cleanTable() {
+  headerTableDevices = document.getElementById("headerTableDevices");
+  TableDevices = document.getElementById("TableDevices");
+
+  headerTableDevices.innerHTML = "";
+  TableDevices.innerHTML = "";
+}
+
 /**
  *
  * @param {*} _option
@@ -205,6 +220,7 @@ function UserMenu() {
 const userChose = function (option) {
   switch (option) {
     case 1:
+      cleanTable();
       /******************************************************************************
        * agregar un nuevo dispositivo
        * definir un objeto
@@ -233,8 +249,6 @@ const userChose = function (option) {
        * se recorre el arreglo de objetos respuesta de la funcion con un for;
        * el resultado se muestra en pantalla
        ******************************************************************************/
-      _showDevicesByUser;
-      lastArrayShow;
 
       _showDevicesByUser = showDevicesByUser(user);
 
@@ -242,17 +256,50 @@ const userChose = function (option) {
         console.log("usted no cuenta con dispositivos");
         alert("usted no cuenta con dispositivos");
       } else {
+
+        headerTableDevices = document.getElementById("headerTableDevices");
+        thDevices = document.createElement("tr");
+
+        thDevices.innerHTML = 
+        `
+        <th scope="col">#</th>
+        <th scope="col">Owner</th>
+        <th scope="col">Serial</th>
+        <th scope="col">Description</th>
+        <th scope="col">State</th>
+        <th scope="col">Date</th>
+        `;
+        headerTableDevices.append(thDevices);
+
         _showDevicesByUser.forEach((element) => {
           lastArrayShow = element;
           console.log(lastArrayShow);
+
+          TableDevices = document.getElementById("TableDevices");
+          thTableDevices = document.createElement("tr");
+
+        thTableDevices.innerHTML = 
+        `
+        <th scope="row">1</th>
+        <td>${lastArrayShow.owner}</td>
+        <td>${lastArrayShow.serial}</td>
+        <td>${lastArrayShow.description}</td>
+        <td>${lastArrayShow.estate}</td>
+        <td>${lastArrayShow.date}</td>
+        `;
+        TableDevices.append(thTableDevices);
+
         });
       }
+
       break;
 
     case 3:
       /******************************************************************************
        * Actulizar
        ******************************************************************************/
+      cleanTable();
+
       console.log("ingrese el serial del dipositivo a actulizar: ");
       numberSerial = prompt("ingrese el serial del dipositivo a actulizar: ");
 
@@ -275,6 +322,8 @@ const userChose = function (option) {
       /******************************************************************************
        * Eliminar
        ******************************************************************************/
+      cleanTable();
+
       console.log("ingrese el serial del dipositivo a eliminar: ");
       numberSerial = prompt("ingrese el serial del dipositivo a eliminar: ");
 
@@ -377,11 +426,12 @@ const options = [
   '<div class="item">4 borrar </div>',
   '<div class="item">5 para salir </div>',
 ];
-
+// credenciales
 let user;
 let passWord;
 let option;
 
+//actulizar dispositivo
 let numberSerial = 0;
 let _showsearchDevicesByUser;
 
@@ -389,10 +439,16 @@ let state = "off";
 let serial;
 let description;
 
+//mostrar dispositivos
 let _showDevicesByUser;
 let lastArrayShow;
-
 let x;
+
+//DOM tabla mostrar dipositivos
+let headerTableDevices;
+let thDevices;
+let TableDevices;
+let thTableDevices;
 
 /******************************************************************************
  * inicio
