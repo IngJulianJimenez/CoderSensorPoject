@@ -16,38 +16,30 @@
     </header>
 
     <main>
-
         <div class="container text-center">
             <div class="row align-items-start">
                 <div class="col">
                 </div>
                 <div class="col">
                 </div>
-                <div class="col">
+                <!-- Mensaje de bienvenida  usuario XXXX -->
+                <div id=user class="col">
                 </div>
             </div>
         </div>
-
+        <!--Menu de opciones-->
         <div class="container">
             <div class="row align-items-start">
-                <div class="col">
+                <div id="MenuOption" class="col">
                 </div>
                 <div class="col">
-                    <!--
-                    Login
-                    se decide usar class para manejo del DOM 
-                    class se genera un array
-                    -->
-                    <form>
-                        <div class="form-group">
-                        </div>
-                        <div class="form-group">
-                        </div>
-                        <br>
-                        <input type="submit" value="Send" class="btn btn-primary">
-                        <div id="send">
-                        </div>
-                    </form>
+                    <!-- Tabla para mostrar los dispositivos del usuario -->
+                    <table class="table">
+                        <thead id="headerTableDevices">
+                        </thead>
+                        <tbody id="TableDevices">
+                        </tbody>
+                    </table>
                 </div>
                 <div class="col">
                 </div>
@@ -57,9 +49,8 @@
 
     <footer>
     </footer>
-    <script src="js/loginUser.js"></script>
-    <!-- 
-    <script src="js/main.js"></script>-->
+    <script src="js/navegacion.js"></script>
+    <script src="js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>

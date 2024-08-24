@@ -220,12 +220,14 @@ function cleanTable() {
 const userChose = function (option) {
   switch (option) {
     case 1:
-      cleanTable();
       /******************************************************************************
        * agregar un nuevo dispositivo
        * definir un objeto
        * agregarlo al arreglo de objetos devices,con devices.push(newDevice);
+       * funcion cleanTable(), limpia el DOM la lista  de usuarios
        ******************************************************************************/
+      cleanTable();
+
       serial = prompt("ingrese el serial del dipositivo: ");
       description = prompt("ingrese una descripcion ");
 
@@ -245,11 +247,23 @@ const userChose = function (option) {
     case 2:
       // funcion clasica
       /******************************************************************************
+       * funcion cleanTable(), limpia el DOM la lista  de usuarios
+       * limpiar el local storage
+       * limpiar el array devicesLs de almacenamiento del local storage
+       * mostrar por El DOM la lista de  devices por usuario.
+       * 
        * mostrar dispositivos
        * se recorre el arreglo de objetos respuesta de la funcion con un for;
        * el resultado se muestra en pantalla
+       * 
+       * guadar en el array devicesLs los dispositivos del usuario
+       * convertir a Json el devicesLs
+       * por ultimo guaraar en el local storage  el Json
        ******************************************************************************/
-
+       cleanTable();
+       localStorage.removeItem("UserDevices");
+       devicesLs=[];
+       
       _showDevicesByUser = showDevicesByUser(user);
 
       if (_showDevicesByUser <= 0) {
@@ -268,12 +282,13 @@ const userChose = function (option) {
         <th scope="col">Description</th>
         <th scope="col">State</th>
         <th scope="col">Date</th>
+        <th scope="col">Temp</th>
         `;
         headerTableDevices.append(thDevices);
 
         _showDevicesByUser.forEach((element) => {
           lastArrayShow = element;
-          console.log(lastArrayShow);
+          //console.log(lastArrayShow); array con el resultado por consola
 
           TableDevices = document.getElementById("TableDevices");
           thTableDevices = document.createElement("tr");
@@ -286,17 +301,22 @@ const userChose = function (option) {
         <td>${lastArrayShow.description}</td>
         <td>${lastArrayShow.estate}</td>
         <td>${lastArrayShow.date}</td>
+         <td>${lastArrayShow.temp}</td>
         `;
         TableDevices.append(thTableDevices);
 
+        devicesLs.push(lastArrayShow);    
+        localStorage.setItem("UserDevices", JSON.stringify(devicesLs));
+
         });
       }
-
+      //console.log("prueba: "+ JSON.stringify(devicesLs));
       break;
 
     case 3:
       /******************************************************************************
        * Actulizar
+       * funcion cleanTable(), limpia el DOM la lista  de usuarios
        ******************************************************************************/
       cleanTable();
 
@@ -321,6 +341,7 @@ const userChose = function (option) {
     case 4:
       /******************************************************************************
        * Eliminar
+       *  funcion cleanTable(), limpia el DOM la lista  de usuarios
        ******************************************************************************/
       cleanTable();
 
@@ -449,6 +470,9 @@ let headerTableDevices;
 let thDevices;
 let TableDevices;
 let thTableDevices;
+
+//guardar en el localStorage
+let devicesLs = [];
 
 /******************************************************************************
  * inicio
