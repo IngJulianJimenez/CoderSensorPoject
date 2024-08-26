@@ -1,31 +1,4 @@
 /**
- *
- * @param {*} _user
- * @param {*} _password
- * @returns true
- * ingresar credenciales
- * el for of recorre el array users
- * se compara cada objeto con el _user y  _password
- * si existe true
- * si no existe false
- */
-function userExist(_user, _password) {
-  let ownerUser;
-  let passwordUser;
-  for (const x of users) {
-    //console.log(x);
-    ownerUser = x.owner;
-    passwordUser = x.password;
-    //console.log(ownerUser);
-
-    if (ownerUser == _user && passwordUser == _password) {
-      return true;
-    }
-  }
-  return false;
-}
-
-/**
  * funcion clasica
  * @param {*} _user
  * @param {*} _numberSerial
@@ -165,31 +138,15 @@ const fnGeneradorNumeros = () => {
   return (Math.random() * 100).toFixed(2);
 };
 
-//funcion gnereador de la fecha actual
-let userDate = function () {
-  let d = new Date();
-
-  console.log(d);
-  console.log(d.getDay());
-
-  let yy = d.getFullYear();
-  let mm = d.getMonth() + 1;
-  let dd = d.getDate();
-  let hh = d.getHours();
-  let mn = d.getMinutes();
-  let ss = d.getSeconds();
-  return yy + "/" + mm + "/" + dd + " " + hh + ":" + mn + ":" + ss;
-};
-
 /**
- * funcion que detrermikan que opcion escoge el usuario
+ * funcion que determina sobre cual opcion hace click el usuario
  * Iteramos sobre el array de elementos options
  * Seleccionamos todos los elementos con la clase "item"
  * Añadimos el evento click a cada elemento
  * Mostar un mensaje sobre la opcion escogida
  * implementar validacion de  1 a 5
  */
-function UserMenu() {
+function UserMenuClick() {
   const options = document.querySelectorAll(".item");
   options.forEach((item, value) => {
     item.addEventListener("click", function () {
@@ -200,7 +157,6 @@ function UserMenu() {
     });
   });
 }
-
 
 /**
  * fucncion para limpiar la tabla
@@ -260,10 +216,10 @@ const userChose = function (option) {
        * convertir a Json el devicesLs
        * por ultimo guaraar en el local storage  el Json
        ******************************************************************************/
-       cleanTable();
-       localStorage.removeItem("UserDevices");
-       devicesLs=[];
-       
+      cleanTable();
+      localStorage.removeItem("UserDevices");
+      devicesLs = [];
+
       _showDevicesByUser = showDevicesByUser(user);
 
       if (_showDevicesByUser <= 0) {
@@ -274,8 +230,8 @@ const userChose = function (option) {
         headerTableDevices = document.getElementById("headerTableDevices");
         thDevices = document.createElement("tr");
 
-        thDevices.innerHTML = 
-        `
+        thDevices.innerHTML =
+          `
         <th scope="col">#</th>
         <th scope="col">Owner</th>
         <th scope="col">Serial</th>
@@ -293,8 +249,8 @@ const userChose = function (option) {
           TableDevices = document.getElementById("TableDevices");
           thTableDevices = document.createElement("tr");
 
-        thTableDevices.innerHTML = 
-        `
+          thTableDevices.innerHTML =
+            `
         <th scope="row">1</th>
         <td>${lastArrayShow.owner}</td>
         <td>${lastArrayShow.serial}</td>
@@ -303,10 +259,10 @@ const userChose = function (option) {
         <td>${lastArrayShow.date}</td>
          <td>${lastArrayShow.temp}</td>
         `;
-        TableDevices.append(thTableDevices);
+          TableDevices.append(thTableDevices);
 
-        devicesLs.push(lastArrayShow);    
-        localStorage.setItem("UserDevices", JSON.stringify(devicesLs));
+          devicesLs.push(lastArrayShow);
+          localStorage.setItem("UserDevices", JSON.stringify(devicesLs));
 
         });
       }
@@ -447,9 +403,9 @@ const options = [
   '<div class="item">4 borrar </div>',
   '<div class="item">5 para salir </div>',
 ];
+
 // credenciales
 let user;
-let passWord;
 let option;
 
 //actulizar dispositivo
@@ -478,26 +434,20 @@ let devicesLs = [];
  * inicio
  * Verificar credenciales
  ******************************************************************************/
-user = prompt("ingrese usuario: ");
-passWord = prompt("ingrese contraseña: ");
+user = localStorage.getItem("user");
 
-if (userExist(user, passWord) == true) {
+if (user != null) {
   alert("Bienvenido.. ! " + user);
 
   /******************************************************************************
    * DOM
    * mostrar en el front
-   * mensaje de bienvenida mas la funcion userDate()
    * usuario que hace login
-   * array menu de opciones
+   * crear el menu de opciones iterando sobre el array options
+   * saber sobre cual opcion hace click UserMenuClick();
+   * funcion para el footer creador y fecha CreateAndDateFooter()
    ******************************************************************************/
-  let frNameHour = document.getElementsByTagName("footer");
-  let frText_1 = document.createElement("p");
-  frText_1.innerHTML =
-    "Creado por Julian Jimenez | Bogota Colombia <b>CoderHouse</b> 2024 | Hora Local: " +
-    userDate();
-  frNameHour[0].append(frText_1);
-
+  CreateAndDateFooter();
   let frUser = document.getElementById("user");
   let frText_2 = document.createElement("p");
   frText_2.innerHTML = `
@@ -512,7 +462,7 @@ if (userExist(user, passWord) == true) {
     frMenuOption.append(ul);
   }
 
-  UserMenu();
+  UserMenuClick();
 } else {
   alert("Please verify your credentials");
 }

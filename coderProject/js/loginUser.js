@@ -19,13 +19,11 @@
 /******************************************************************************
  * Declaracion de variables
  ******************************************************************************/
-
 const loginForm = document.getElementById("loginForm");
 const input1 = document.createElement('input');
 const input2 = document.createElement('input');
 const input3 = document.createElement('input');
 const div = document.createElement('div');
-
 
 let users = [
     {
@@ -89,8 +87,9 @@ loginForm.appendChild(div);
  * inicio
  * Verificar credenciales
  * prevenir el refresh preventDefault();
+ * guardar datos del usuario en el localStorage
+ * invocar la funcion para navegacion a otra pagina fnNavigation()
  ******************************************************************************/
-
 loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
     //console.log("formualrio Enviado");
@@ -102,6 +101,7 @@ loginForm.addEventListener("submit", (e) => {
     passWord = form.children[1].value;
 
     if (userExist(user, passWord) == true) {
+        localStorage.setItem("user",user);
         fnNavigation("home");
     }else{
         document.getElementById('ierror-message').innerText = "¡Por favor, verifique las credenciales!";
