@@ -195,9 +195,14 @@ const userChose = function (option) {
       alert("dispositivo agregado consulte desde el menu de opciones");
       */
       //otra forma de agregar mas pro
-      devices.push(new addDevices(user, serial, description, state));
-      console.log("dispositivo agregado consulte desde el menu de opciones: ");
-      alert("dispositivo agregado consulte desde el menu de opciones");
+      if (serial != null && description != null) {
+        devices.push(new addDevices(user, serial, description, state));
+        console.log(
+          "dispositivo agregado consulte desde el menu de opciones: "
+        );
+        alert("dispositivo agregado consulte desde el menu de opciones");
+      }
+
       break;
 
     case 2:
@@ -207,11 +212,11 @@ const userChose = function (option) {
        * limpiar el local storage
        * limpiar el array devicesLs de almacenamiento del local storage
        * mostrar por El DOM la lista de  devices por usuario.
-       * 
+       *
        * mostrar dispositivos
        * se recorre el arreglo de objetos respuesta de la funcion con un for;
        * el resultado se muestra en pantalla
-       * 
+       *
        * guadar en el array devicesLs los dispositivos del usuario
        * convertir a Json el devicesLs
        * por ultimo guaraar en el local storage  el Json
@@ -226,12 +231,10 @@ const userChose = function (option) {
         console.log("usted no cuenta con dispositivos");
         alert("usted no cuenta con dispositivos");
       } else {
-
         headerTableDevices = document.getElementById("headerTableDevices");
         thDevices = document.createElement("tr");
 
-        thDevices.innerHTML =
-          `
+        thDevices.innerHTML = `
         <th scope="col">#</th>
         <th scope="col">Owner</th>
         <th scope="col">Serial</th>
@@ -249,8 +252,7 @@ const userChose = function (option) {
           TableDevices = document.getElementById("TableDevices");
           thTableDevices = document.createElement("tr");
 
-          thTableDevices.innerHTML =
-            `
+          thTableDevices.innerHTML = `
         <th scope="row">1</th>
         <td>${lastArrayShow.owner}</td>
         <td>${lastArrayShow.serial}</td>
@@ -263,7 +265,6 @@ const userChose = function (option) {
 
           devicesLs.push(lastArrayShow);
           localStorage.setItem("UserDevices", JSON.stringify(devicesLs));
-
         });
       }
       //console.log("prueba: "+ JSON.stringify(devicesLs));
@@ -437,7 +438,7 @@ let devicesLs = [];
 user = localStorage.getItem("user");
 
 if (user != null) {
-  alert("Bienvenido.. ! " + user);
+  //alert("Bienvenido.. ! " + user);
 
   /******************************************************************************
    * DOM
