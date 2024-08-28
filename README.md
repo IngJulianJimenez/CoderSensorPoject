@@ -55,3 +55,10 @@ serial:
 
 - Varaibles locales y variables globales .
 
+# Alcance tercera entrega:
+
+- Manejo de DOM
+- Manejo de eventos
+- Uso de local Storage
+
+
