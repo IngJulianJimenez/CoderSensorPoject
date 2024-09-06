@@ -88,7 +88,7 @@ loginForm.appendChild(div);
  * Verificar credenciales
  * prevenir el refresh preventDefault();
  * guardar datos del usuario en el localStorage
- * invocar la funcion para navegacion a otra pagina fnNavigation()
+ * redireccionar a la pantalla home => window.location.href
  ******************************************************************************/
 loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -102,7 +102,7 @@ loginForm.addEventListener("submit", (e) => {
 
     if (userExist(user, passWord) == true) {
         localStorage.setItem("user",user);
-        fnNavigation("home");
+        window.location.href = "home" + ".html";
     }else{
         document.getElementById('ierror-message').innerText = "¡Por favor, verifique las credenciales!";
     }
