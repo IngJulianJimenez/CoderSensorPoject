@@ -103,7 +103,8 @@ loginForm.appendChild(div);
 
 /******************************************************************************
  * inicio
- *
+ * funcion readUserJson leer json local con los usuarios
+ * 
  * Verificar credenciales
  * prevenir el refresh preventDefault();
  * guardar datos del usuario en el localStorage

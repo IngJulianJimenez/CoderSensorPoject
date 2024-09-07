@@ -184,8 +184,39 @@ const userChose = function (option) {
        ******************************************************************************/
       cleanTable();
 
-      serial = prompt("ingrese el serial del dipositivo: ");
-      description = prompt("ingrese una descripcion ");
+      let formulario = document.querySelector('#formulario');
+      let serial = document.getElementById('serial');
+      let description = document.getElementById('description');
+
+      let div1 = document.createElement("div");
+      let input1 = document.createElement("input");
+      
+      div1.className = "mb-3";
+
+      input1.id = "serial";
+      input1.type = "text";
+      input1.className = "form-control";
+      input1.placeholder = "Ingrese serial";
+      
+      //<input id="serial" type="text" class="form-control" placeholder="Ingrese serial">
+      formulario.appendChild(div1);
+      div1.appendChild(input1);
+
+
+      formulario.addEventListener("submit",(e)=>{ 
+        e.preventDefault();
+
+    
+        console.log(serial.value);
+        console.log(description.value);
+
+
+      });
+
+
+
+      //serial = prompt("ingrese el serial del dipositivo: ");
+      //description = prompt("ingrese una descripcion ");
 
       //instanciar objeto y agregar objeto
       /** 
@@ -433,7 +464,7 @@ let devicesLs = [];
 
 /******************************************************************************
  * inicio
- * Verificar credenciales
+ * leer data en el local storage
  ******************************************************************************/
 user = localStorage.getItem("user");
 
@@ -452,7 +483,8 @@ if (user != null) {
   let frUser = document.getElementById("user");
   let frText_2 = document.createElement("p");
   frText_2.innerHTML = `
-  Bienvenido!: <b>${user.toUpperCase()}</b> 
+  Bienvenido!: <b>${user.toUpperCase()}</b>
+  <img src="https://cdn.pixabay.com/photo/2012/04/25/01/26/alien-41606_1280.png" alt="Avatar" style="width: 30px; border-radius: 50%;"> 
   `;
   frUser.append(frText_2);
 
