@@ -1,0 +1,17 @@
+[
+    {
+        "owner": "usera",
+        "password": "Co123@",
+        "imagen": "https://cdn.pixabay.com/photo/2016/08/21/18/48/emoticon-1610518_1280.png"
+    },
+    {
+        "owner": "userb",
+        "password": "Co123#",
+        "imagen": "https://cdn.pixabay.com/photo/2017/10/10/19/55/emoji-2838557_1280.png"
+    },
+    {
+        "owner": "super",
+        "password": "Co123*",
+        "imagen": "https://cdn.pixabay.com/photo/2012/04/25/01/26/alien-41606_1280.png"
+    }
+]

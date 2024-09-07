@@ -18,16 +18,11 @@ const enlances = [
     link: "contacto",
     nombre: "Contacto",
   },
+  {
+    link: "logOut",
+    nombre: "Log out",
+  },
 ];
-
-/******************************************************************************
- * Funciones
- *****************************************************************************
-function fnNavigation(_page) {
-    console.log(`${_page}` + ".html");
-    window.location.href = `${_page}` + ".html";
-}
-*/
 
 //funcion generador de la fecha actual
 let userDate = function () {
