@@ -159,7 +159,8 @@ function UserMenuClick() {
 }
 
 /**
- * fucncion para limpiar la tabla
+ * funcion limpiar la tabla mostrar usuarios
+ * funcion limpiar formulario
  */
 function cleanTable() {
   headerTableDevices = document.getElementById("headerTableDevices");
@@ -167,6 +168,9 @@ function cleanTable() {
 
   headerTableDevices.innerHTML = "";
   TableDevices.innerHTML = "";
+
+  let formulario = document.querySelector('#formulario');
+  formulario.innerHTML = "";
 }
 
 /**
@@ -177,63 +181,90 @@ const userChose = function (option) {
   switch (option) {
     case 1:
       /******************************************************************************
+       * funcion cleanTable(), limpia el DOM
+       * 
+       * DOM para  generar el formulario
+       * funcion evento formulario
        * agregar un nuevo dispositivo
-       * definir un objeto
-       * agregarlo al arreglo de objetos devices,con devices.push(newDevice);
-       * funcion cleanTable(), limpia el DOM la lista  de usuarios
+       * instanciar un objeto addDevices()
+       * agregarlo el objeto devices.push(newDevice);
+       * 
        ******************************************************************************/
       cleanTable();
 
       let formulario = document.querySelector('#formulario');
-      let serial = document.getElementById('serial');
-      let description = document.getElementById('description');
 
       let div1 = document.createElement("div");
+      let div2 = document.createElement("div");
       let input1 = document.createElement("input");
-      
-      div1.className = "mb-3";
+      let input2 = document.createElement("input");
+      let button = document.createElement("button");
 
+      div1.className = "mb-3";
       input1.id = "serial";
       input1.type = "text";
       input1.className = "form-control";
       input1.placeholder = "Ingrese serial";
-      
+
+      div2.className = "mb-3";
+      input2.id = "description";
+      input2.type = "text";
+      input2.className = "form-control";
+      input2.placeholder = "Ingrese descripción";
+
+      button.type = "submit";
+      button.className = "btn btn-primary",
+      button.innerText = "Agregar"
+
       //<input id="serial" type="text" class="form-control" placeholder="Ingrese serial">
+      //<button type="submit" class="btn btn-primary">Agregar</button>
+
       formulario.appendChild(div1);
       div1.appendChild(input1);
+      formulario.appendChild(div2);
+      div2.appendChild(input2);
+      formulario.appendChild(button);
 
-
-      formulario.addEventListener("submit",(e)=>{ 
+      formulario.addEventListener("submit", (e) => {
         e.preventDefault();
+        let serial = document.getElementById('serial').value;
+        let description = document.getElementById('description').value;
+        //console.log(typeof(serial));
+        //console.log(typeof(description));
 
-    
-        console.log(serial.value);
-        console.log(description.value);
-
-
-      });
-
-
-
-      //serial = prompt("ingrese el serial del dipositivo: ");
-      //description = prompt("ingrese una descripcion ");
-
-      //instanciar objeto y agregar objeto
-      /** 
-      const newDevice = new addDevices(user, serial, description, state);
-      devices.push(newDevice);
-      console.log("dispositivo agregado consulte desde el menu de opciones: " + newDevice);
-      alert("dispositivo agregado consulte desde el menu de opciones");
-      */
-      //otra forma de agregar mas pro
-      if (serial != null && description != null) {
-        devices.push(new addDevices(user, serial, description, state));
-        console.log(
-          "dispositivo agregado consulte desde el menu de opciones: "
-        );
+        //instanciar objeto y agregar objeto
+        /** 
+        const newDevice = new addDevices(user, serial, description, state);
+        devices.push(newDevice);
+        console.log("dispositivo agregado consulte desde el menu de opciones: " + newDevice);
         alert("dispositivo agregado consulte desde el menu de opciones");
-      }
+        */
+        //otra forma de agregar mas pro
+        //serial != null && description != null &&
+        if ( serial != "" && description != "") {
+          devices.push(new addDevices(user, serial, description, state));
+          
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Se ha guardado la información.",
+            showConfirmButton: false,
+            timer: 1500
+          });
+          cleanTable();
 
+        }
+        else {
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Ha ocurrido un error, inténtelo nuevamente.",
+            showConfirmButton: false,
+            timer: 1500
+          });
+          cleanTable();
+        }
+      });
       break;
 
     case 2:
