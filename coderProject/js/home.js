@@ -159,21 +159,6 @@ function UserMenuClick() {
 }
 
 /**
- * funcion limpiar la tabla mostrar usuarios
- * funcion limpiar formulario
- */
-function cleanTable() {
-  headerTableDevices = document.getElementById("headerTableDevices");
-  TableDevices = document.getElementById("TableDevices");
-
-  headerTableDevices.innerHTML = "";
-  TableDevices.innerHTML = "";
-
-  let formulario = document.querySelector('#formulario');
-  formulario.innerHTML = "";
-}
-
-/**
  *
  * @param {*} _option
  */
@@ -183,7 +168,7 @@ const userChose = function (option) {
       /******************************************************************************
        * funcion cleanTable(), limpia el DOM
        * 
-       * DOM para  generar el formulario
+       * DOM para  generar el formulario agregarUsuario()
        * funcion evento formulario
        * agregar un nuevo dispositivo
        * instanciar un objeto addDevices()
@@ -191,39 +176,7 @@ const userChose = function (option) {
        * 
        ******************************************************************************/
       cleanTable();
-
-      let formulario = document.querySelector('#formulario');
-
-      let div1 = document.createElement("div");
-      let div2 = document.createElement("div");
-      let input1 = document.createElement("input");
-      let input2 = document.createElement("input");
-      let button = document.createElement("button");
-
-      div1.className = "mb-3";
-      input1.id = "serial";
-      input1.type = "text";
-      input1.className = "form-control";
-      input1.placeholder = "Ingrese serial";
-
-      div2.className = "mb-3";
-      input2.id = "description";
-      input2.type = "text";
-      input2.className = "form-control";
-      input2.placeholder = "Ingrese descripción";
-
-      button.type = "submit";
-      button.className = "btn btn-primary",
-      button.innerText = "Agregar"
-
-      //<input id="serial" type="text" class="form-control" placeholder="Ingrese serial">
-      //<button type="submit" class="btn btn-primary">Agregar</button>
-
-      formulario.appendChild(div1);
-      div1.appendChild(input1);
-      formulario.appendChild(div2);
-      div2.appendChild(input2);
-      formulario.appendChild(button);
+      agregarUsuario();
 
       formulario.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -241,9 +194,9 @@ const userChose = function (option) {
         */
         //otra forma de agregar mas pro
         //serial != null && description != null &&
-        if ( serial != "" && description != "") {
+        if (serial != "" && description != "") {
           devices.push(new addDevices(user, serial, description, state));
-          
+
           Swal.fire({
             position: "center",
             icon: "success",
@@ -273,7 +226,7 @@ const userChose = function (option) {
        * funcion cleanTable(), limpia el DOM la lista  de usuarios
        * limpiar el local storage
        * limpiar el array devicesLs de almacenamiento del local storage
-       * mostrar por El DOM la lista de  devices por usuario.
+       * mostrar por El DOM la lista de  devices por usuario showTableUsersDevices();
        *
        * mostrar dispositivos
        * se recorre el arreglo de objetos respuesta de la funcion con un for;
@@ -293,41 +246,7 @@ const userChose = function (option) {
         console.log("usted no cuenta con dispositivos");
         alert("usted no cuenta con dispositivos");
       } else {
-        headerTableDevices = document.getElementById("headerTableDevices");
-        thDevices = document.createElement("tr");
-
-        thDevices.innerHTML = `
-        <th scope="col">#</th>
-        <th scope="col">Owner</th>
-        <th scope="col">Serial</th>
-        <th scope="col">Description</th>
-        <th scope="col">State</th>
-        <th scope="col">Date</th>
-        <th scope="col">Temp</th>
-        `;
-        headerTableDevices.append(thDevices);
-
-        _showDevicesByUser.forEach((element) => {
-          lastArrayShow = element;
-          //console.log(lastArrayShow); array con el resultado por consola
-
-          TableDevices = document.getElementById("TableDevices");
-          thTableDevices = document.createElement("tr");
-
-          thTableDevices.innerHTML = `
-        <th scope="row">1</th>
-        <td>${lastArrayShow.owner}</td>
-        <td>${lastArrayShow.serial}</td>
-        <td>${lastArrayShow.description}</td>
-        <td>${lastArrayShow.estate}</td>
-        <td>${lastArrayShow.date}</td>
-         <td>${lastArrayShow.temp}</td>
-        `;
-          TableDevices.append(thTableDevices);
-
-          devicesLs.push(lastArrayShow);
-          localStorage.setItem("UserDevices", JSON.stringify(devicesLs));
-        });
+        showTableUsersDevices();
       }
       //console.log("prueba: "+ JSON.stringify(devicesLs));
       break;
@@ -400,6 +319,7 @@ const userChose = function (option) {
  * declaracion de varaibles
  ******************************************************************************/
 
+/**
 let users = [
   {
     owner: "usera",
@@ -414,6 +334,7 @@ let users = [
     password: "Co123*",
   },
 ];
+ */
 
 let devices = [
   {
@@ -484,11 +405,7 @@ let _showDevicesByUser;
 let lastArrayShow;
 let x;
 
-//DOM tabla mostrar dipositivos
-let headerTableDevices;
-let thDevices;
-let TableDevices;
-let thTableDevices;
+
 
 //guardar en el localStorage
 let devicesLs = [];
@@ -504,21 +421,13 @@ if (user != null) {
 
   /******************************************************************************
    * DOM
-   * mostrar en el front
-   * usuario que hace login
+   * mostrar en el front, usuario que hace login userImageLogin()
    * crear el menu de opciones iterando sobre el array options
    * saber sobre cual opcion hace click UserMenuClick();
    * funcion para el footer creador y fecha CreateAndDateFooter()
    ******************************************************************************/
   CreateAndDateFooter();
-  let frUser = document.getElementById("user");
-  let frText_2 = document.createElement("p");
-  frText_2.innerHTML = `
-  Bienvenido!: <b>${user.toUpperCase()}</b>
-  <img src="https://cdn.pixabay.com/photo/2012/04/25/01/26/alien-41606_1280.png" alt="Avatar" style="width: 30px; border-radius: 50%;"> 
-  `;
-  frUser.append(frText_2);
-
+  userImageLogin(user);
   let frMenuOption = document.getElementById("MenuOption");
   for (const op of options) {
     let ul = document.createElement("ul");
