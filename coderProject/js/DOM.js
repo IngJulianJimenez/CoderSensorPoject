@@ -26,12 +26,12 @@ function cleanTable() {
 /*******************************************************************************
  * mostrar usuario que hace login e imagen home.js
  *******************************************************************************/
-function userImageLogin(user) {
+function userImageLogin(user,imagen) {
   let frUser = document.getElementById("user");
   let frText_2 = document.createElement("p");
   frText_2.innerHTML = `
   Bienvenido!!!!!!: <b>${user.toUpperCase()}</b>
-  <img src="https://cdn.pixabay.com/photo/2012/04/25/01/26/alien-41606_1280.png" alt="Avatar" style="width: 30px; border-radius: 50%;"> 
+  <img src="${imagen}" alt="Avatar" style="width: 40px; border-radius: 50%;"> 
   `;
   frUser.append(frText_2);
 }
@@ -58,7 +58,7 @@ function agregarUsuario() {
   input2.id = "description";
   input2.type = "text";
   input2.className = "form-control";
-  input2.placeholder = "Ingrese descripción";
+  input2.placeholder = "Ingrese Ciudad";
 
   button.type = "submit";
   button.className = "btn btn-primary",
@@ -85,7 +85,7 @@ function showTableUsersDevices() {
   <th scope="col">#</th>
   <th scope="col">Owner</th>
   <th scope="col">Serial</th>
-  <th scope="col">Description</th>
+  <th scope="col">City</th>
   <th scope="col">State</th>
   <th scope="col">Date</th>
   <th scope="col">Temp</th>
@@ -94,7 +94,7 @@ function showTableUsersDevices() {
 
   _showDevicesByUser.forEach((element) => {
     lastArrayShow = element;
-    //console.log(lastArrayShow); array con el resultado por consola
+    //console.log("listado"+lastArrayShow); //array con el resultado por consola
 
     TableDevices = document.getElementById("TableDevices");
     thTableDevices = document.createElement("tr");
@@ -113,5 +113,4 @@ function showTableUsersDevices() {
     devicesLs.push(lastArrayShow);
     localStorage.setItem("UserDevices", JSON.stringify(devicesLs));
   });
-
 }

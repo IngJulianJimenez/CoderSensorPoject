@@ -43,6 +43,7 @@ function searchDevicesByUser(_user, _numberSerial) {
  */
 const deleteDeviceByUser = function (_numberSerial) {
   devices = devices.filter((devices) => devices.serial != _numberSerial);
+  localStorage.setItem("UserDevices", JSON.stringify(devices)); // guardar en el local storage el array devices
 };
 
 /**
@@ -56,6 +57,8 @@ const deleteDeviceByUser = function (_numberSerial) {
  * description
  * state
  * userDate() actualizar fecha
+ * recorrer el array devices[], si hace match reemplazar las propiedades del objeto con los datos de entrada
+ * guadar en local storage 
  */
 const updateDeviceByUser = function (
   _user,
@@ -80,6 +83,7 @@ const updateDeviceByUser = function (
       userDevice.estate = _state;
     }
   }
+  localStorage.setItem("UserDevices", JSON.stringify(devices)); // guardar en el local storage
 };
 
 /**
@@ -92,12 +96,13 @@ const updateDeviceByUser = function (
  * comparar si el valor de la propiedad es igual al user que hace login userOwner == _user;
  * concatenar el resultado en una arreglo vacio resultArray;
  * fnGeneradorNumeros() genera un numero aleatorio  para simular la tempertura
+ * Guardar en el local storage el dispositivo que se ingresa
  */
 function showDevicesByUser(_user) {
   let userDevice;
   let userOwner;
   let resultArray = [];
-
+  
   for (let index = 0; index < devices.length; index++) {
     userDevice = devices[index];
     //console.log(userDevice);
@@ -106,16 +111,21 @@ function showDevicesByUser(_user) {
     userOwner = userDevice.owner;
     //console.log("x:"+userOwner);
 
-    if (userOwner == _user) {
-      userDevice.temp = fnGeneradorNumeros();
+    if (userOwner == _user){
+      //userDevice.state = state;
+      //userDevice.date = null;
+      //userDevice.temp = null;      
+      
+      //userDevice.temp = fnGeneradorNumeros();
       //console.log(userDevice.temp);
-      //console.log(userDevice);
+      //console.log(userDevice);      
       resultArray.push(userDevice);
     }
+    localStorage.setItem("UserDevices", JSON.stringify(resultArray)); // guardar en el local storage
   }
-  //console.log(answerArray);
+  //console.log(resultArray);
   return resultArray;
-}
+};
 
 /**
  * clase constructor de un objeto
@@ -125,11 +135,13 @@ function showDevicesByUser(_user) {
  * @param {*} _al agregar es off
  */
 class addDevices {
-  constructor(_owner, _serial, _description, _estate) {
+  constructor(_owner, _serial, _description, _estate, _date, _temp) {
     this.owner = _owner;
     this.serial = _serial;
     this.description = _description;
     this.estate = _estate;
+    this.date = _date;
+    this.temp = _temp;
   }
 }
 
@@ -153,35 +165,65 @@ function UserMenuClick() {
       //alert('Has Seleccionado la opcion ' + item.innerHTML +" " +`${parseInt(value)}` );
       alert("Has Seleccionado " + item.innerHTML);
       //console.log(parseInt(value));
-      userChose(parseInt(value));
+      userChoose(parseInt(value));
     });
   });
 }
+
+
+const waetherApi = async (_user) => {
+  let userCity;
+  let userDevice;
+  let userOwner;
+  
+  for (let index = 0; index < devices.length; index++) {
+    userDevice = devices[index];
+    //console.log(userDevice);
+    //console.log(devices[0]);
+
+    userOwner = userDevice.owner;
+    userCity = userDevice.description;
+    //console.log("x:"+userOwner);
+
+    if (userOwner == _user){
+
+    const respuesta = await fetch(`https://${url}?q=${userCity}&appid=${appkey}`);
+    const data = await respuesta.json();
+     //temp izquierda objeto devices == temp respuesta APi
+     userDevice.temp = data?.main?.temp;
+     //console.log(userDevice.temp);
+      console.log(userDevice);      
+      devicesLs.push(userDevice);
+    }
+    localStorage.setItem("UserDevices", JSON.stringify(devicesLs)); // guardar en el local storage
+  }
+  
+  
+};
 
 /**
  *
  * @param {*} _option
  */
-const userChose = function (option) {
+const userChoose = function (option) {
   switch (option) {
     case 1:
       /******************************************************************************
        * funcion cleanTable(), limpia el DOM
-       * 
-       * DOM para  generar el formulario agregarUsuario()
+       *
+       * DOM formulario agregarUsuario()
        * funcion evento formulario
-       * agregar un nuevo dispositivo
-       * instanciar un objeto addDevices()
-       * agregarlo el objeto devices.push(newDevice);
-       * 
+       * agregar un nuevo dispositivo, instanciar un objeto addDevices()
+       * agregar el nuevo dispositivo showDevicesByUser();
+       *
        ******************************************************************************/
       cleanTable();
       agregarUsuario();
 
       formulario.addEventListener("submit", (e) => {
         e.preventDefault();
-        let serial = document.getElementById('serial').value;
-        let description = document.getElementById('description').value;
+        let serial = document.getElementById("serial").value;
+        let description = document.getElementById("description").value;
         //console.log(typeof(serial));
         //console.log(typeof(description));
 
@@ -195,25 +237,27 @@ const userChose = function (option) {
         //otra forma de agregar mas pro
         //serial != null && description != null &&
         if (serial != "" && description != "") {
-          devices.push(new addDevices(user, serial, description, state));
+          devices.push(new addDevices(user, serial, description, state = "off", date = "", temp = null));
+           
+          showDevicesByUser(user);
+          //console.log(devices);
+          //console.log(showDevicesByUser(user));
 
           Swal.fire({
             position: "center",
             icon: "success",
             title: "Se ha guardado la información.",
             showConfirmButton: false,
-            timer: 1500
+            timer: 1500,
           });
           cleanTable();
-
-        }
-        else {
+        } else {
           Swal.fire({
             position: "center",
             icon: "error",
             title: "Ha ocurrido un error, inténtelo nuevamente.",
             showConfirmButton: false,
-            timer: 1500
+            timer: 1500,
           });
           cleanTable();
         }
@@ -237,7 +281,6 @@ const userChose = function (option) {
        * por ultimo guaraar en el local storage  el Json
        ******************************************************************************/
       cleanTable();
-      localStorage.removeItem("UserDevices");
       devicesLs = [];
 
       _showDevicesByUser = showDevicesByUser(user);
@@ -318,7 +361,7 @@ const userChose = function (option) {
 /******************************************************************************
  * declaracion de varaibles
  ******************************************************************************/
-
+let devices = []; // guardar datos del local storage
 /**
 let users = [
   {
@@ -334,7 +377,6 @@ let users = [
     password: "Co123*",
   },
 ];
- */
 
 let devices = [
   {
@@ -378,6 +420,7 @@ let devices = [
     temp: "",
   },
 ];
+*/
 
 const options = [
   '<div class="item"><b> Seleccione una opción del menú: </b></div>',
@@ -390,51 +433,64 @@ const options = [
 
 // credenciales
 let user;
+let imagen;
 let option;
 
 //actulizar dispositivo
 let numberSerial = 0;
 let _showsearchDevicesByUser;
 
+//agregar dispositivo
 let state = "off";
 let serial;
 let description;
+let date;
+let temp;
 
 //mostrar dispositivos
 let _showDevicesByUser;
 let lastArrayShow;
 let x;
 
-
-
 //guardar en el localStorage
 let devicesLs = [];
+
+//varaibles consumir el Api
+const url = "api.openweathermap.org/data/2.5/weather";
+let appkey = "5f5d115d54af7d2c880aee2f2ea144bd";
+let city;
 
 /******************************************************************************
  * inicio
  * leer data en el local storage
  ******************************************************************************/
 user = localStorage.getItem("user");
+imagen = localStorage.getItem("imagen");
 
 if (user != null) {
   //alert("Bienvenido.. ! " + user);
 
   /******************************************************************************
    * DOM
+   * funcion para el footer creador y fecha CreateAndDateFooter()
    * mostrar en el front, usuario que hace login userImageLogin()
    * crear el menu de opciones iterando sobre el array options
    * saber sobre cual opcion hace click UserMenuClick();
-   * funcion para el footer creador y fecha CreateAndDateFooter()
+   * leer local storage y pasear el json a un array de objetos   
    ******************************************************************************/
   CreateAndDateFooter();
-  userImageLogin(user);
+  userImageLogin(user, imagen);
+
+  //leer local storage y pasear
+  devices = JSON.parse(localStorage.getItem("UserDevices"));
+  waetherApi(user); // leer Api y actualizar datos clima
+
   let frMenuOption = document.getElementById("MenuOption");
   for (const op of options) {
     let ul = document.createElement("ul");
     ul.innerHTML = `<li class="list-group-item">${op}</li>`;
     frMenuOption.append(ul);
   }
-
   UserMenuClick();
 } else {
   alert("Please verify your credentials");
