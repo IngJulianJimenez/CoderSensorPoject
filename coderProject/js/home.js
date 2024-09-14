@@ -88,40 +88,24 @@ const updateDeviceByUser = function (
 
 /**
  * funcion clasica
- * @param {_user} _user
+ * @param {_usr} _user
  * @returns resultArray
- * se recorre el arreglo de objetos devices con un for;
- * el objeto completo y sustributos se guardan en userDevice, por cada ciclo del for;
- * se accede al la propiedad del objeto en cada ciclo del for con userOwner=userDevice.owner;
- * comparar si el valor de la propiedad es igual al user que hace login userOwner == _user;
- * concatenar el resultado en una arreglo vacio resultArray;
- * fnGeneradorNumeros() genera un numero aleatorio  para simular la tempertura
- * Guardar en el local storage el dispositivo que se ingresa
+ * recorrer el array devices obtener la propiedad _dev[index].owner 
+ * comparar el userOwner del array con el valor de entrada _usr
+ * si hace match el objeto completo se guarda en un nuevo resultArray
+ * se sobre escribe el json UserDevices en el localStorage
  */
-function showDevicesByUser(_user) {
-  let userDevice;
+function showDevicesByUser(_usr,_dev) {
   let userOwner;
   let resultArray = [];
-
-  for (let index = 0; index < devices.length; index++) {
-    userDevice = devices[index];
-    //console.log(userDevice);
-    //console.log(devices[0]);
-
-    userOwner = userDevice.owner;
+  for (let index = 0; index < _dev.length; index++) {
+    userOwner = _dev[index].owner;
     //console.log("x:"+userOwner);
-
-    if (userOwner == _user) {
-      //userDevice.state = state;
-      //userDevice.date = null;
-      //userDevice.temp = null;
-
-      //userDevice.temp = fnGeneradorNumeros();
-      //console.log(userDevice.temp);
-      //console.log(userDevice);
-      resultArray.push(userDevice);
+    if (userOwner == _usr) {
+      //console.log(_dev[index]);
+      resultArray.push(_dev[index]);
     }
-    localStorage.setItem("UserDevices", JSON.stringify(resultArray)); // guardar en el local storage
+    localStorage.setItem("UserDevices", JSON.stringify(_dev)); // guardar en el local storage
   }
   //console.log(resultArray);
   return resultArray;
@@ -198,23 +182,24 @@ const waetherApi = async (_usr,_dev,_ul,_apky) => {
 };
 
 /**
- *
  * @param {*} _option
+ * funcion para la opcion que escoge el usuario
  */
 const userChoose = function (option) {
   switch (option) {
     case 1:
       /******************************************************************************
        * funcion cleanTable(), limpia el DOM
-       *
-       * DOM formulario agregarUsuario()
+       * DOM formulario para agregar nuevos dispositivos agregarUsuario()
+       * leer  el local storage  y guardar la data de  UserDevices en el array devices
        * funcion evento formulario
        * agregar un nuevo dispositivo, instanciar un objeto addDevices()
        * agregar el nuevo dispositivo showDevicesByUser();
-       *
+       * funcion waetherApi() para consumir el api del clima, y actulizar el valor de temp
        ******************************************************************************/
       cleanTable();
       agregarUsuario();
+      devices = JSON.parse(localStorage.getItem("UserDevices"));
 
       formulario.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -231,22 +216,11 @@ const userChoose = function (option) {
         alert("dispositivo agregado consulte desde el menu de opciones");
         */
         //otra forma de agregar mas pro
-        //serial != null && description != null &&
         if (serial != "" && description != "") {
-          devices.push(
-            new addDevices(
-              user,
-              serial,
-              description,
-              (state = "off"),
-              (date = ""),
-              (temp = null)
-            )
-          );
+          devices.push(new addDevices(user,serial,description,(state = "off"),(date = ""),(temp = null)));
 
-          showDevicesByUser(user);
-          //console.log(devices);
-          //console.log(showDevicesByUser(user));
+          showDevicesByUser(user,devices);
+          waetherApi(user,devices,url,appkey); 
 
           Swal.fire({
             position: "center",
@@ -255,7 +229,7 @@ const userChoose = function (option) {
             showConfirmButton: false,
             timer: 1500,
           });
-          cleanTable();
+          //cleanTable();
         } else {
           Swal.fire({
             position: "center",
@@ -264,7 +238,7 @@ const userChoose = function (option) {
             showConfirmButton: false,
             timer: 1500,
           });
-          cleanTable();
+          //cleanTable();
         }
       });
       break;
@@ -457,8 +431,6 @@ let _showDevicesByUser;
 let lastArrayShow;
 let x;
 
-//guardar en el localStorage
-let devicesLs = [];
 
 //varaibles consumir el Api
 const url = "api.openweathermap.org/data/2.5/weather";
@@ -481,11 +453,13 @@ if (user != null) {
   * 
   * crear el menu de opciones iterando sobre el array options
   * funcion UserMenuClick(), spara saber sobre cual opcion se hace click
+  * borrar el array devices
   ******************************************************************************/
 
   devices = JSON.parse(localStorage.getItem("UserDevices"));
   waetherApi(user,devices,url,appkey); 
-
+  devices = [];
+  
   let frMenuOption = document.getElementById("MenuOption");
   for (const op of options) {
     let ul = document.createElement("ul");
