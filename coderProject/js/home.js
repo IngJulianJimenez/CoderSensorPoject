@@ -58,7 +58,7 @@ const deleteDeviceByUser = function (_numberSerial) {
  * state
  * userDate() actualizar fecha
  * recorrer el array devices[], si hace match reemplazar las propiedades del objeto con los datos de entrada
- * guadar en local storage 
+ * guadar en local storage
  */
 const updateDeviceByUser = function (
   _user,
@@ -102,7 +102,7 @@ function showDevicesByUser(_user) {
   let userDevice;
   let userOwner;
   let resultArray = [];
-  
+
   for (let index = 0; index < devices.length; index++) {
     userDevice = devices[index];
     //console.log(userDevice);
@@ -111,21 +111,21 @@ function showDevicesByUser(_user) {
     userOwner = userDevice.owner;
     //console.log("x:"+userOwner);
 
-    if (userOwner == _user){
+    if (userOwner == _user) {
       //userDevice.state = state;
       //userDevice.date = null;
-      //userDevice.temp = null;      
-      
+      //userDevice.temp = null;
+
       //userDevice.temp = fnGeneradorNumeros();
       //console.log(userDevice.temp);
-      //console.log(userDevice);      
+      //console.log(userDevice);
       resultArray.push(userDevice);
     }
     localStorage.setItem("UserDevices", JSON.stringify(resultArray)); // guardar en el local storage
   }
   //console.log(resultArray);
   return resultArray;
-};
+}
 
 /**
  * clase constructor de un objeto
@@ -171,14 +171,14 @@ function UserMenuClick() {
 }
 
 /**
- * @param {*} 
+ * @param {*}
  * se consume el api del clima y se actuliza el valor de la temperatura
  */
 const waetherApi = async (_user) => {
   let userCity;
   let userDevice;
   let userOwner;
-  
+
   for (let index = 0; index < devices.length; index++) {
     userDevice = devices[index];
     //console.log(userDevice);
@@ -188,20 +188,19 @@ const waetherApi = async (_user) => {
     userCity = userDevice.description;
     //console.log("x:"+userOwner);
 
-    if (userOwner == _user){
-
-    const respuesta = await fetch(`https://${url}?q=${userCity}&appid=${appkey}`);
-    const data = await respuesta.json();
-     //temp izquierda objeto devices == temp respuesta APi
-     userDevice.temp = data?.main?.temp;
-     //console.log(userDevice.temp);
-      console.log(userDevice);      
+    if (userOwner == _user) {
+      const respuesta = await fetch(
+        `https://${url}?q=${userCity}&appid=${appkey}`
+      );
+      const data = await respuesta.json();
+      //temp izquierda objeto devices == temp respuesta APi
+      userDevice.temp = data?.main?.temp;
+      //console.log(userDevice.temp);
+      console.log(userDevice);
       devicesLs.push(userDevice);
     }
     localStorage.setItem("UserDevices", JSON.stringify(devicesLs)); // guardar en el local storage
   }
-  
-  
 };
 
 /**
@@ -240,8 +239,17 @@ const userChoose = function (option) {
         //otra forma de agregar mas pro
         //serial != null && description != null &&
         if (serial != "" && description != "") {
-          devices.push(new addDevices(user, serial, description, state = "off", date = "", temp = null));
-           
+          devices.push(
+            new addDevices(
+              user,
+              serial,
+              description,
+              (state = "off"),
+              (date = ""),
+              (temp = null)
+            )
+          );
+
           showDevicesByUser(user);
           //console.log(devices);
           //console.log(showDevicesByUser(user));
@@ -474,15 +482,13 @@ if (user != null) {
   //alert("Bienvenido.. ! " + user);
 
   /******************************************************************************
-   * DOM
-   * funcion para el footer creador y fecha CreateAndDateFooter()
-   * mostrar en el front, usuario que hace login userImageLogin()
-   * crear el menu de opciones iterando sobre el array options
-   * saber sobre cual opcion hace click UserMenuClick();
-   * leer local storage y pasear el json a un array de objetos   
-   ******************************************************************************/
-  CreateAndDateFooter();
-  userImageLogin(user, imagen);
+  * leer local storage y pasear el json a un array de objetos  
+  * leer el api  del clima waetherApi()
+  * crear el menu de opciones iterando sobre el array options
+  * saber sobre cual opcion hace click UserMenuClick();
+  ******************************************************************************/
+  //CreateAndDateFooter();
+  //userImageLogin(user, imagen);
 
   //leer local storage y pasear
   devices = JSON.parse(localStorage.getItem("UserDevices"));

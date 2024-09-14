@@ -1,14 +1,6 @@
 /******************************************************************************
  * Declaracion de variables
  ******************************************************************************/
-//FOOTER
-let footer = document.getElementsByTagName("footer");
-let p = document.createElement("p");
-
-//NAVBAR
-const div = document.querySelector("#navbarText");
-const ul = document.createElement("ul");
-
 const enlances = [
   {
     link: "home",
@@ -19,7 +11,7 @@ const enlances = [
     nombre: "Contacto",
   },
   {
-    link: "logOut",
+    link: "#",
     nombre: "Log out",
   },
 ];
@@ -40,13 +32,16 @@ let userDate = function () {
 };
 
 /******************************************************************************
- * DOM
- * mostrar en el front
+ * mostrar en el front footer
  * mensaje de bienvenida mas la funcion userDate()
  * usuario que hace login
  *
  * creaion del  NAVBAR
  ******************************************************************************/
+//FOOTER
+let footer = document.getElementsByTagName("footer");
+let p = document.createElement("p");
+
 function CreateAndDateFooter() {
   p.innerHTML =
     " © All rights reserved. Julian Jimenez | Bogota Colombia <b>CoderHouse</b> 2024 | Hora Local: " +
@@ -55,6 +50,8 @@ function CreateAndDateFooter() {
 }
 
 //NAVBAR
+const div = document.querySelector("#navbarText");
+const ul = document.createElement("ul");
 //li se crea con cada iteracion del for, por fuera solo se crea una vez
 div.appendChild(ul);
 ul.className = "navbar-nav";
@@ -63,3 +60,41 @@ for (const i of enlances) {
   li.innerHTML = `<a class="nav-link" href="${i.link}.html">${i.nombre}</a>`;
   ul.appendChild(li);
 }
+
+/******************************************************************************
+ * salir en logOut
+ * modal sweet alert
+ * proceso afirmativo, borrar el storage , redireccion index.html
+ ******************************************************************************/
+function UserNavBar() {
+  const navLink = document.querySelectorAll(".nav-link");
+  navLink.forEach((item, value) => {
+    item.addEventListener("click", function () {
+      //alert('Has Seleccionado la opcion ' + item.innerHTML +" " +`${parseInt(value)}` );
+      if (parseInt(value)===2){
+        Swal.fire({
+          title: "Está a punto de cerrar sesión",
+          text: "¿Desea continuar?",
+          icon: "warning",
+          showDenyButton: true,
+          confirmButtonColor: "#3085d6",
+          denyButtonColor: "#d33",
+          confirmButtonText: "Si, continuar!"
+        }).then((result) => {
+          
+          if (result.isConfirmed) {
+            localStorage.clear();
+            window.location.href = "index" + ".html";
+          }
+        });          
+      }
+    });
+  });
+}
+
+UserNavBar();
+
+
+
+
+
