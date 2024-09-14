@@ -151,19 +151,18 @@ const fnGeneradorNumeros = () => {
 };
 
 /**
- * funcion que determina sobre cual opcion hace click el usuario
- * Iteramos sobre el array de elementos options
- * Seleccionamos todos los elementos con la clase "item"
- * Añadimos el evento click a cada elemento
- * Mostar un mensaje sobre la opcion escogida
- * implementar validacion de  1 a 5
+ * funcion que determina sobre cual opcion selecciona el usuario
+ * para saber sobre cual opcion se hace click se llama la clase class="item" del html
+ * el evento addEventListener toma los datos de la posicion donde se hace click
+ * la funcion userChoose la opcion donde se hace click (valor entero) 
+ * 
  */
 function UserMenuClick() {
-  const options = document.querySelectorAll(".item");
-  options.forEach((item, value) => {
+  const optionClick = document.querySelectorAll(".item");
+  optionClick.forEach((item, value) => {
     item.addEventListener("click", function () {
       //alert('Has Seleccionado la opcion ' + item.innerHTML +" " +`${parseInt(value)}` );
-      alert("Has Seleccionado " + item.innerHTML);
+      //alert("Has Seleccionado " + item.innerHTML);
       //console.log(parseInt(value));
       userChoose(parseInt(value));
     });
@@ -495,5 +494,6 @@ if (user != null) {
   }
   UserMenuClick();
 } else {
-  alert("Please verify your credentials");
+  //alert("Please verify your credentials");
+  window.location.href = "404" + ".html";
 }
