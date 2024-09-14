@@ -90,12 +90,12 @@ const updateDeviceByUser = function (
  * funcion clasica
  * @param {_usr} _user
  * @returns resultArray
- * recorrer el array devices obtener la propiedad _dev[index].owner 
+ * recorrer el array devices obtener la propiedad _dev[index].owner
  * comparar el userOwner del array con el valor de entrada _usr
  * si hace match el objeto completo se guarda en un nuevo resultArray
  * se sobre escribe el json UserDevices en el localStorage con el valor del resultArray
  */
-function showDevicesByUser(_usr,_dev) {
+function showDevicesByUser(_usr, _dev) {
   let userOwner;
   let resultArray = [];
   for (let index = 0; index < _dev.length; index++) {
@@ -138,8 +138,8 @@ const fnGeneradorNumeros = () => {
  * funcion que determina sobre cual opcion selecciona el usuario
  * para saber sobre cual opcion se hace click se llama la clase class="item" del html
  * el evento addEventListener toma los datos de la posicion donde se hace click
- * la funcion userChoose la opcion donde se hace click (valor entero) 
- * 
+ * la funcion userChoose la opcion donde se hace click (valor entero)
+ *
  */
 function UserMenuClick() {
   const optionClick = document.querySelectorAll(".item");
@@ -154,10 +154,10 @@ function UserMenuClick() {
 }
 
 /**
- * @param {*} _usr 
- * @param {*} _dev 
- * @param {*} _ul 
- * @param {*} _apky 
+ * @param {*} _usr
+ * @param {*} _dev
+ * @param {*} _ul
+ * @param {*} _apky
  * recorrer el array devices obtener la ciudad y el usuario
  * comparar el usuario del array con el valor de entrada
  * si hace match el usuario, consumir el api clima con el valor de ciudad
@@ -165,11 +165,11 @@ function UserMenuClick() {
  * guardar el resultado en un nuevo array
  * se sobre escribe el json UserDevices en el localStorage
  */
-const waetherApi = async (_usr,_dev,_ul,_apky) => {
+const waetherApi = async (_usr, _dev, _ul, _apky) => {
   let userCity;
   let userOwner;
   let resultArray = [];
-  for (let index = 0; index <_dev.length; index++) {
+  for (let index = 0; index < _dev.length; index++) {
     userOwner = _dev[index].owner;
     userCity = _dev[index].description;
     if (userOwner == _usr) {
@@ -220,10 +220,19 @@ const userChoose = function (option) {
         */
         //otra forma de agregar mas pro
         if (serial != "" && description != "") {
-          devices.push(new addDevices(user,serial,description,(state = "off"),(date = ""),(temp = null)));
+          devices.push(
+            new addDevices(
+              user,
+              serial,
+              description,
+              (state = "off"),
+              (date = ""),
+              (temp = null)
+            )
+          );
 
-          showDevicesByUser(user,devices);
-          waetherApi(user,devices,url,appkey); 
+          showDevicesByUser(user, devices);
+          waetherApi(user, devices, url, appkey);
           cleanTable();
 
           Swal.fire({
@@ -261,14 +270,8 @@ const userChoose = function (option) {
        ******************************************************************************/
       cleanTable();
       devices = JSON.parse(localStorage.getItem("UserDevices"));
-      _showDevicesByUser = showDevicesByUser(user,devices); 
+      _showDevicesByUser = showDevicesByUser(user, devices);
       if (_showDevicesByUser <= 0) {
-
-
-
-        console.log("usted no cuenta con dispositivos");
-        alert("usted no cuenta con dispositivos");
-
         Swal.fire({
           position: "center",
           icon: "error",
@@ -276,7 +279,6 @@ const userChoose = function (option) {
           showConfirmButton: false,
           timer: 1500,
         });
-
       } else {
         showTableUsersDevices();
       }
@@ -412,11 +414,10 @@ let devices = [
 
 const options = [
   '<div class="item"><b> Seleccione una opción del menú: </b></div>',
-  '<div class="item">1 para ingresar nuevo dispositivos </div>',
-  '<div class="item">2 mostrar dispositivos </div>',
-  '<div class="item">3 actulizar </div>',
-  '<div class="item">4 borrar </div>',
-  '<div class="item">5 para salir </div>',
+  '<div class="item">Ingresar dispositivo. </div>',
+  '<div class="item">Mostrar lista dispositivos. </div>',
+  '<div class="item">Actaulizar lista dispositivos. </div>',
+  '<div class="item">Borrar dispositivo. </div>',
 ];
 
 // credenciales
@@ -440,7 +441,6 @@ let _showDevicesByUser;
 let lastArrayShow;
 let x;
 
-
 //varaibles consumir el Api
 const url = "api.openweathermap.org/data/2.5/weather";
 let appkey = "5f5d115d54af7d2c880aee2f2ea144bd";
@@ -457,18 +457,18 @@ if (user != null) {
   //alert("Bienvenido.. ! " + user);
 
   /******************************************************************************
-  * leer local storage y pasear el json a un array de objetos devices
-  * consumir el api del clima waetherApi() y actualizar el valor temp de devices
-  * 
-  * crear el menu de opciones iterando sobre el array options
-  * funcion UserMenuClick(), spara saber sobre cual opcion se hace click
-  * borrar el array devices
-  ******************************************************************************/
+   * leer local storage y pasear el json a un array de objetos devices
+   * consumir el api del clima waetherApi() y actualizar el valor temp de devices
+   *
+   * crear el menu de opciones iterando sobre el array options
+   * funcion UserMenuClick(), spara saber sobre cual opcion se hace click
+   * borrar el array devices
+   ******************************************************************************/
 
   devices = JSON.parse(localStorage.getItem("UserDevices"));
-  waetherApi(user,devices,url,appkey); 
+  waetherApi(user, devices, url, appkey);
   devices = [];
-  
+
   let frMenuOption = document.getElementById("MenuOption");
   for (const op of options) {
     let ul = document.createElement("ul");
