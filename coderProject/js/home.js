@@ -38,7 +38,7 @@ function searchDevicesByUser(_user, _numberSerial) {
  * funcion anonima
  * @param {*} _numberSerial
  * previamente se consulta si el serial existe
- * si la cinsulta es verdadera
+ * si la cosulta es verdadera
  * se ingresa el serial y se borra del array devices
  */
 const deleteDeviceByUser = function (_numberSerial) {
@@ -170,7 +170,10 @@ function UserMenuClick() {
   });
 }
 
-
+/**
+ * @param {*} 
+ * se consume el api del clima y se actuliza el valor de la temperatura
+ */
 const waetherApi = async (_user) => {
   let userCity;
   let userDevice;

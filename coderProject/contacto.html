@@ -1,64 +1,91 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sensor</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+  <!-- Font Awesome CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <!-- libreria AOS-->
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <!-- libreria sweet alert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <title>Sensor</title>
 </head>
 
-<body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Comision #59950</a>
-             <!--NavBAR -->
-            <div id="navbarText">
-            </div>
-        </nav>
-    </header>
+<body class="p-3 m-0 border-0 bd-example m-0 border-0">
 
-    <main>
-        <div class="container text-center">
-            <div class="row align-items-start">
-                <div class="col">
-                </div>
-                <div class="col">
-                </div>
-                <!-- Mensaje de bienvenida  usuario XXXX -->
-                <div id=user class="col">
-                </div>
-            </div>
-        </div>
-        <!--Menu de opciones-->
-        <div class="container">
-            <div class="row align-items-start">
-                <div id="MenuOption" class="col">
-                </div>
-                <div class="col">
-                    <!-- Tabla para mostrar los dispositivos del usuario -->
-                    <table class="table">
-                        <thead id="headerTableDevices">
-                        </thead>
-                        <tbody id="TableDevices">
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col">
-                </div>
-            </div>
-        </div>
-    </main>
+  <!-- Example Code -->
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Comision #59950</a>
+      <!--NavBAR -->
+      <div id="navbarText">
+      </div>
 
-    <footer>
-    </footer>
-    <script src="js/navigation.js"></script>
-    <script src="js/contacto.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+      <ul class="navbar-nav ms-auto">
+        <!-- Mensaje de bienvenida  usuario XXXX -->
+        <div id=user class="col">
+        </div>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container mt-5">
+      <h2 class="mb-4">Sobre Nosotros</h2>
+
+      <!-- Grid Row -->
+      <div class="row">
+
+        <!-- Column 3: takes 4 columns out of 12 (on large screens), full width on mobile -->
+        <div class="col-lg-4 col-md-6 col-12 mb-4">
+          <div class="custom-column shadow-sm p-3">
+            <h5>historia</h5>
+            <p>Los primeros pobladores de Bogotá fueron los Muiscas, pertenecientes a la familia lingüística Chibcha. A
+              la llegada de los conquistadores, se calcula que había medio millón de indígenas de este grupo. Ocupaban
+              las tierras altas y las faldas templadas entre el macizo de Sumapaz en el suroeste y el nevado del Cocuy
+              en el noreste, en una extensión de unos 25.000 km2 que abarcan la altiplanicie de Bogotá, parte del actual
+              departamento de Boyacá y una pequeña región de Santander.</p>
+            <i class="fas fa-user info-icon text-primary"></i>
+            <p>Julian Jimenez</p>
+            <i class="fa-solid fa-phone text-success"></i>
+            <p>12345678</p>
+            <i class="fa-solid fa-location-dot text-danger"></i>
+            <p>123 Main Street, Anytown, USA</p>
+          </div>
+        </div>
+
+
+        <!-- Column 2: takes 4 columns out of 12 (on large screens), full width on mobile -->
+        <div class="col-lg-6 col-md-12 mb-4">
+          <div class="custom-column shadow p-3">
+            <div data-aos="flip-down" data-aos-duration="1500">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7952.695625280444!2d-74.10312954999999!3d4.7095056!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f84b501450769%3A0x7c33817703b1b576!2zUXVpcmlndWEsIEVuZ2F0aXbDoSwgQm9nb3TDoQ!5e0!3m2!1ses-419!2sco!4v1724721121605!5m2!1ses-419!2sco"
+                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+  </main>
+  <footer class="bg-dark text-white text-center p-3 bg-dark">
+    <div class="text-center p-3 bg-dark">
+    </div>
+  </footer>
+  <script src="js/DOM.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/contacto.js"></script>
+  <!-- libreria AOS-->
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
 </body>
 
 </html>

@@ -30,7 +30,7 @@ function userImageLogin(user,imagen) {
   let frUser = document.getElementById("user");
   let frText_2 = document.createElement("p");
   frText_2.innerHTML = `
-  Bienvenido!!!!!!: <b>${user.toUpperCase()}</b>
+  <b>${user.toUpperCase()}</b>           
   <img src="${imagen}" alt="Avatar" style="width: 40px; border-radius: 50%;"> 
   `;
   frUser.append(frText_2);

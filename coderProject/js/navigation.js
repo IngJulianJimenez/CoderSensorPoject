@@ -49,7 +49,7 @@ let userDate = function () {
  ******************************************************************************/
 function CreateAndDateFooter() {
   p.innerHTML =
-    "Creado por Julian Jimenez | Bogota Colombia <b>CoderHouse</b> 2024 | Hora Local: " +
+    " © All rights reserved. Julian Jimenez | Bogota Colombia <b>CoderHouse</b> 2024 | Hora Local: " +
     userDate();
   footer[0].append(p);
 }
