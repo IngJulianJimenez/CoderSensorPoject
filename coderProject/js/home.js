@@ -171,35 +171,30 @@ function UserMenuClick() {
 }
 
 /**
- * @param {*}
- * se consume el api del clima y se actuliza el valor de la temperatura
+ * @param {*} _usr 
+ * @param {*} _dev 
+ * @param {*} _ul 
+ * @param {*} _apky 
+ * recorrer el array devices obtener la ciudad y el usuario
+ * comparar el usuario del array con el valor de entrada
+ * si hace match el usuario, consumir el api clima con el valor de ciudad
+ * actualizar el valor temp del array, con la repuesta del api clima °C
+ * se sobre escribe el json UserDevices en el localStorage
  */
-const waetherApi = async (_user) => {
+const waetherApi = async (_usr,_dev,_ul,_apky) => {
   let userCity;
-  let userDevice;
   let userOwner;
-
-  for (let index = 0; index < devices.length; index++) {
-    userDevice = devices[index];
-    //console.log(userDevice);
-    //console.log(devices[0]);
-
-    userOwner = userDevice.owner;
-    userCity = userDevice.description;
-    //console.log("x:"+userOwner);
-
-    if (userOwner == _user) {
+  for (let index = 0; index <_dev.length; index++) {
+    userOwner = _dev[index].owner;
+    userCity = _dev[index].description;
+    if (userOwner == _usr) {
       const respuesta = await fetch(
-        `https://${url}?q=${userCity}&appid=${appkey}`
+        `https://${_ul}?q=${userCity}&appid=${_apky}&units=metric`
       );
       const data = await respuesta.json();
-      //temp izquierda objeto devices == temp respuesta APi
-      userDevice.temp = data?.main?.temp;
-      //console.log(userDevice.temp);
-      console.log(userDevice);
-      devicesLs.push(userDevice);
+      _dev[index].temp = data?.main?.temp;
     }
-    localStorage.setItem("UserDevices", JSON.stringify(devicesLs)); // guardar en el local storage
+    localStorage.setItem("UserDevices", JSON.stringify(_dev));
   }
 };
 
@@ -372,7 +367,7 @@ const userChoose = function (option) {
 /******************************************************************************
  * declaracion de varaibles
  ******************************************************************************/
-let devices = []; // guardar datos del local storage
+let devices = []; // leer la informacion del local storage
 /**
 let users = [
   {
@@ -482,17 +477,15 @@ if (user != null) {
   //alert("Bienvenido.. ! " + user);
 
   /******************************************************************************
-  * leer local storage y pasear el json a un array de objetos  
-  * leer el api  del clima waetherApi()
+  * leer local storage y pasear el json a un array de objetos devices
+  * consumir el api del clima waetherApi() y actualizar el valor temp de devices
+  * 
   * crear el menu de opciones iterando sobre el array options
-  * saber sobre cual opcion hace click UserMenuClick();
+  * funcion UserMenuClick(), spara saber sobre cual opcion se hace click
   ******************************************************************************/
-  //CreateAndDateFooter();
-  //userImageLogin(user, imagen);
 
-  //leer local storage y pasear
   devices = JSON.parse(localStorage.getItem("UserDevices"));
-  waetherApi(user); // leer Api y actualizar datos clima
+  waetherApi(user,devices,url,appkey); 
 
   let frMenuOption = document.getElementById("MenuOption");
   for (const op of options) {
