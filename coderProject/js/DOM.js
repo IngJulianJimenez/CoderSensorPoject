@@ -109,8 +109,5 @@ function showTableUsersDevices() {
    <td>${lastArrayShow.temp}</td>
   `;
     TableDevices.append(thTableDevices);
-
-    devicesLs.push(lastArrayShow);
-    localStorage.setItem("UserDevices", JSON.stringify(devicesLs));
   });
 }

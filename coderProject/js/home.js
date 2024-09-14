@@ -93,7 +93,7 @@ const updateDeviceByUser = function (
  * recorrer el array devices obtener la propiedad _dev[index].owner 
  * comparar el userOwner del array con el valor de entrada _usr
  * si hace match el objeto completo se guarda en un nuevo resultArray
- * se sobre escribe el json UserDevices en el localStorage
+ * se sobre escribe el json UserDevices en el localStorage con el valor del resultArray
  */
 function showDevicesByUser(_usr,_dev) {
   let userOwner;
@@ -105,7 +105,7 @@ function showDevicesByUser(_usr,_dev) {
       //console.log(_dev[index]);
       resultArray.push(_dev[index]);
     }
-    localStorage.setItem("UserDevices", JSON.stringify(_dev)); // guardar en el local storage
+    localStorage.setItem("UserDevices", JSON.stringify(resultArray));
   }
   //console.log(resultArray);
   return resultArray;
@@ -162,11 +162,13 @@ function UserMenuClick() {
  * comparar el usuario del array con el valor de entrada
  * si hace match el usuario, consumir el api clima con el valor de ciudad
  * actualizar el valor temp del array, con la repuesta del api clima °C
+ * guardar el resultado en un nuevo array
  * se sobre escribe el json UserDevices en el localStorage
  */
 const waetherApi = async (_usr,_dev,_ul,_apky) => {
   let userCity;
   let userOwner;
+  let resultArray = [];
   for (let index = 0; index <_dev.length; index++) {
     userOwner = _dev[index].owner;
     userCity = _dev[index].description;
@@ -176,8 +178,9 @@ const waetherApi = async (_usr,_dev,_ul,_apky) => {
       );
       const data = await respuesta.json();
       _dev[index].temp = data?.main?.temp;
+      resultArray.push(_dev[index]);
     }
-    localStorage.setItem("UserDevices", JSON.stringify(_dev));
+    localStorage.setItem("UserDevices", JSON.stringify(resultArray));
   }
 };
 
@@ -205,8 +208,8 @@ const userChoose = function (option) {
         e.preventDefault();
         let serial = document.getElementById("serial").value;
         let description = document.getElementById("description").value;
-        //console.log(typeof(serial));
-        //console.log(typeof(description));
+        //console.log(typeof(serial)+serial);
+        //console.log(typeof(description)+description);
 
         //instanciar objeto y agregar objeto
         /** 
@@ -221,6 +224,7 @@ const userChoose = function (option) {
 
           showDevicesByUser(user,devices);
           waetherApi(user,devices,url,appkey); 
+          cleanTable();
 
           Swal.fire({
             position: "center",
@@ -229,7 +233,6 @@ const userChoose = function (option) {
             showConfirmButton: false,
             timer: 1500,
           });
-          //cleanTable();
         } else {
           Swal.fire({
             position: "center",
@@ -238,7 +241,6 @@ const userChoose = function (option) {
             showConfirmButton: false,
             timer: 1500,
           });
-          //cleanTable();
         }
       });
       break;
@@ -247,8 +249,6 @@ const userChoose = function (option) {
       // funcion clasica
       /******************************************************************************
        * funcion cleanTable(), limpia el DOM la lista  de usuarios
-       * limpiar el local storage
-       * limpiar el array devicesLs de almacenamiento del local storage
        * mostrar por El DOM la lista de  devices por usuario showTableUsersDevices();
        *
        * mostrar dispositivos
@@ -260,17 +260,26 @@ const userChoose = function (option) {
        * por ultimo guaraar en el local storage  el Json
        ******************************************************************************/
       cleanTable();
-      devicesLs = [];
-
-      _showDevicesByUser = showDevicesByUser(user);
-
+      devices = JSON.parse(localStorage.getItem("UserDevices"));
+      _showDevicesByUser = showDevicesByUser(user,devices); 
       if (_showDevicesByUser <= 0) {
+
+
+
         console.log("usted no cuenta con dispositivos");
         alert("usted no cuenta con dispositivos");
+
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "usted no cuenta con dispositivos!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+
       } else {
         showTableUsersDevices();
       }
-      //console.log("prueba: "+ JSON.stringify(devicesLs));
       break;
 
     case 3:
