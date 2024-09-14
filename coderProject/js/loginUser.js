@@ -59,33 +59,23 @@ const readUserJson = async () => {
  * funcion clasica
  * @param {_user} _user
  * @returns resultArray
- * se recorre el arreglo de objetos devices con un for;
- * el objeto completo y sustributos se guardan en userDevice, por cada ciclo del for;
- * se accede al la propiedad del objeto en cada ciclo del for con userOwner=userDevice.owner;
- * comparar si el valor de la propiedad es igual al user que hace login userOwner == _user;
- * concatenar el resultado en una arreglo vacio resultArray;
- * fnGeneradorNumeros() genera un numero aleatorio  para simular la tempertura
+ * recorrer el array devices obtener la propiedad _dev[index].owner 
+ * comparar el userOwner del array con el valor de entrada _usr
+ * si hace match el objeto completo se guarda en un nuevo resultArray
+ * se sobre escribe el json UserDevices en el localStorage, con el array resultArray
+ * se intenta sobre escribir con _dev y el reultado es todo el array de entrada sin filtrar
  */
-function showDevicesByUser__(_user) {
-  let userDevice;
+function showDevicesByUser__(_usr,_dev ) {
   let userOwner;
   let resultArray = [];
 
-  for (let index = 0; index < devices.length; index++) {
-    userDevice = devices[index];
-    //console.log(userDevice);
-    //console.log(devices[0]);
-
-    userOwner = userDevice.owner;
+  for (let index = 0; index < _dev.length; index++) {
+    userOwner = _dev[index].owner;
     //console.log("x:"+userOwner);
-  
-    if (userOwner == _user) {
-      //userDevice.temp = fnGeneradorNumeros();
-      //console.log(userDevice.temp);
-      //console.log(userDevice);
-      resultArray.push(userDevice);
+    if (userOwner == _usr) {
+      resultArray.push(_dev[index]);
     }
-      
+    localStorage.setItem("UserDevices", JSON.stringify(resultArray)); // guardar en el local storage      
   }
   //console.log(answerArray);
   return resultArray;
@@ -187,8 +177,8 @@ loginForm.addEventListener("submit", (e) => {
   passWord = form.children[1].value;
 
   if (userExist(user, passWord) == true){
-    let _showDevicesByUser_ = showDevicesByUser__(user);
-    localStorage.setItem("UserDevices", JSON.stringify(_showDevicesByUser_)); // guardar en el local storage
+    showDevicesByUser__(user,devices);
+    //localStorage.setItem("UserDevices", JSON.stringify(_showDevicesByUser_)); // guardar en el local storage
     //console.log(_showDevicesByUser_);
     //localStorage.setItem("user", user);
     window.location.href = "home" + ".html";
