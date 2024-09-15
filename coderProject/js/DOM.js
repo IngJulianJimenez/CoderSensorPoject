@@ -62,7 +62,7 @@ function agregarUsuarioDom() {
 
   button.type = "submit";
   button.className = "btn btn-primary",
-    button.innerText = "Agregar"
+  button.innerText = "Agregar"
 
   //<input id="serial" type="text" class="form-control" placeholder="Ingrese serial">
   //<button type="submit" class="btn btn-primary">Agregar</button>

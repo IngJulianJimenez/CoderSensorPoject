@@ -84,12 +84,6 @@ function showDevicesByUser__(_usr,_dev ) {
 /******************************************************************************
  * Declaracion de variables
  ******************************************************************************/
-const loginForm = document.getElementById("loginForm");
-const input1 = document.createElement("input");
-const input2 = document.createElement("input");
-const input3 = document.createElement("input");
-const div = document.createElement("div");
-
 let users = [];
 let devices = [];
 
@@ -124,27 +118,42 @@ let option;
  * creación botton
  * mensaje de error si falla las credenciales
  ******************************************************************************/
+const loginForm = document.getElementById("loginForm");
+let div1 = document.createElement("div");
+let div2 = document.createElement("div");
+let div3 = document.createElement("div");
+let input1 = document.createElement("input");
+let input2 = document.createElement("input");
+let button = document.createElement("input");
+let div = document.createElement("div");
+
+div1.className = "mb-3";
 input1.id = "username";
 input1.type = "text";
 input1.className = "form-control";
 input1.placeholder = "Ingrese Usuario";
 input1.required = true;
-loginForm.appendChild(input1);
+loginForm.appendChild(div1);
+div1.appendChild(input1);
 //<input type="text" id="username" class="form-control" placeholder="Username" required>
 
+div2.className = "mb-3";
 input2.id = "password";
 input2.type = "password";
 input2.className = "form-control";
 input2.placeholder = "Ingrese Contraseña";
 input2.required = true;
-loginForm.appendChild(input2);
+loginForm.appendChild(div2);
+div2.appendChild(input2);
 // <input type="password" id="password" class="form-control" placeholder="Password" required>
 
-input3.id = "idBtnLogin";
-input3.type = "submit";
-input3.className = "btn btn-primary";
-input3.value = "Login";
-loginForm.appendChild(input3);
+div3.className = "d-grid gap-2";
+button.id = "idBtnLogin";
+button.type = "submit";
+button.className = "btn btn-primary";
+button.value = "Login";
+loginForm.appendChild(div3);
+div3.appendChild(button);
 //<input id="idBtnLogin" type="submit" value="Send" class="btn btn-primary"></input>
 
 div.id = "ierror-message";
@@ -172,9 +181,8 @@ loginForm.addEventListener("submit", (e) => {
   //console.log("usuario es: "+form.children[0].value);
   //console.log("password es: "+form.children[1].value);
 
-  let form = e.target;
-  user = form.children[0].value;
-  passWord = form.children[1].value;
+  user = document.getElementById("username").value;
+  passWord = document.getElementById("password").value;
 
   if (userExist(user, passWord) == true){
     showDevicesByUser__(user,devices);
