@@ -3,12 +3,12 @@
  * @param {*} _user
  * @param {*} _numberSerial
  * @returns resultArray
- * se recorre el arreglo de objetos devices con un for;
- * el objeto completo y sus atributos se guardan en userDevice, por cada ciclo del for;
- * se accede al la propiedad del objeto en cada ciclo del for[index], con userOwner=userDevice.owner y userSerial = userDevice.serial ;
- * comparar si el valor de user que hace login y el serial hacen match en el array devices con userOwner == _user y el serial;
- * si la comparacion es valida exist = true;
- * si la comparacion no es valida exist = false;
+ * recorrer el array devices obtener
+ * comparar userOwner con el valor de entrada
+ * comparar userSerial con el valor de entrada
+ * si hace match el usuario el dispositvo existe
+ * actualizar el valor temp del array, con la repuesta del api clima °C
+ * se sobre escribe el json UserDevices en el localStorage
  */
 function searchDevicesByUser(_usr, _nbrSrl,_dev) {
   let userOwner;
@@ -59,23 +59,22 @@ const updateDeviceByUser = function (
   _state,
   _funcion
 ) {
-  let userDevice;
   let userOwner;
   let userSerial;
 
   for (let index = 0; index < devices.length; index++) {
     userDevice = devices[index];
 
-    userOwner = userDevice.owner;
-    userSerial = userDevice.serial;
+    userOwner = devices[index].owner;
+    userSerial = devices[index].serial;
 
     if (userOwner == _user && userSerial == _numberSerial) {
-      userDevice.date = _funcion; //actualizar fecha
-      userDevice.description = _description;
-      userDevice.estate = _state;
+      devices[index].date = _funcion; //actualizar fecha
+      devices[index].description = _description;
+      devices[index].estate = _state;
     }
+    localStorage.setItem("UserDevices", JSON.stringify(devices[index])); // guardar en el local storage
   }
-  localStorage.setItem("UserDevices", JSON.stringify(devices)); // guardar en el local storage
 };
 
 /**
@@ -318,7 +317,10 @@ const userChoose = function (option) {
         _showsearchDevicesByUser = searchDevicesByUser(user, numberSerial, devices);
         if (_showsearchDevicesByUser && numberSerial != "" && description != "") {
           updateDeviceByUser(user, numberSerial, description, state, userDate()); // enviar fecha
+          waetherApi(user, devices, url, appkey);
+
           cleanTable();
+          devices=[];
           Swal.fire({
             position: "center",
             icon: "success",

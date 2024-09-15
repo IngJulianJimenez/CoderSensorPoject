@@ -144,7 +144,7 @@ function showTableUsersDevices() {
   <th scope="col">City</th>
   <th scope="col">State</th>
   <th scope="col">Date</th>
-  <th scope="col">Temp</th>
+  <th scope="col">Temp°C</th>
   `;
   headerTableDevices.append(thDevices);
 
