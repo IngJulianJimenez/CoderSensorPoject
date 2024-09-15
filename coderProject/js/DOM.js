@@ -39,7 +39,7 @@ function userImageLogin(user,imagen) {
 /*******************************************************************************
  * formulario para agregar dispositivo en el home.js
  *******************************************************************************/
-function agregarUsuario() {
+function agregarUsuarioDom() {
   let formulario = document.querySelector('#formulario');
 
   let div1 = document.createElement("div");
@@ -71,6 +71,62 @@ function agregarUsuario() {
   div1.appendChild(input1);
   formulario.appendChild(div2);
   div2.appendChild(input2);
+  formulario.appendChild(button);
+}
+
+/*******************************************************************************
+ * formulario para actulizar dispositivo en el home.js
+ *******************************************************************************/
+function updateDispositivoDom() {
+  let formulario = document.querySelector("#formulario");
+  let div1 = document.createElement("div");
+  let div2 = document.createElement("div");
+  let div3 = document.createElement("div");
+  let input1 = document.createElement("input");
+  let input2 = document.createElement("input");
+  let label = document.createElement("label");
+  let select = document.createElement("select");
+  let optionState = ["on", "off"];
+
+  let button = document.createElement("button");
+
+  div1.className = "mb-3";
+  input1.id = "numberSerial";
+  input1.type = "text";
+  input1.className = "form-control";
+  input1.placeholder = "Ingrese serial";
+
+  div2.className = "mb-3";
+  input2.id = "city";
+  input2.type = "text";
+  input2.className = "form-control";
+  input2.placeholder = "Ingrese Ciudad";
+
+  div3.className = "mb-3";
+  label.innerText = "Seleccione un estado: ";
+  select.id = "stateOption"; // para capturar el valor de la lista despegable
+  select.className = "form-select";
+  for (const op of optionState) {
+    let option = document.createElement("option");
+    option.value = op;
+    option.innerText = `${op}`;
+    select.appendChild(option);
+  }
+
+  button.type = "submit";
+  (button.className = "btn btn-primary"),
+  (button.innerText = "Actulizar");
+
+  //<input id="serial" type="text" class="form-control" placeholder="Ingrese serial">
+  //<button type="submit" class="btn btn-primary">Agregar</button>
+
+  formulario.appendChild(div1);
+  div1.appendChild(input1);
+  formulario.appendChild(div2);
+  div2.appendChild(input2);
+  formulario.appendChild(div3);
+  div3.appendChild(label);
+  label.appendChild(select);
   formulario.appendChild(button);
 }
 

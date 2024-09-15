@@ -83,7 +83,7 @@ if (user != null) {
             text: "¿Desea continuar?",
             icon: "warning",
             showDenyButton: true,
-            confirmButtonColor: "#3085d6",
+            confirmButtonColor: "#2ac42f",
             denyButtonColor: "#d33",
             confirmButtonText: "Si, continuar!",
           }).then((result) => {

@@ -10,23 +10,15 @@
  * si la comparacion es valida exist = true;
  * si la comparacion no es valida exist = false;
  */
-function searchDevicesByUser(_user, _numberSerial) {
-  let userDevice;
+function searchDevicesByUser(_usr, _nbrSrl,_dev) {
   let userOwner;
   let userSerial;
-  let exist = false;
-
-  for (let index = 0; index < devices.length; index++) {
-    userDevice = devices[index];
-    //console.log(userDevice);
-    //console.log(devices[0]);
-
-    userOwner = userDevice.owner;
-    userSerial = userDevice.serial;
+  let exist = false;  
+  for (let index = 0; index < _dev.length; index++) {
+    userOwner = _dev[index].owner;
+    userSerial = _dev[index].serial;
     //console.log("x:"+userOwner);
-
-    if (userOwner == _user && userSerial == _numberSerial) {
-      //
+    if (userOwner == _usr && userSerial == _nbrSrl) {
       //console.log(userDevice);
       exist = true;
     }
@@ -134,6 +126,21 @@ const fnGeneradorNumeros = () => {
   return (Math.random() * 100).toFixed(2);
 };
 
+  //funcion generador de la fecha actual
+  let userDate = function () {
+    let d = new Date();
+    //console.log(d);
+    //console.log(d.getDay());
+
+    let yy = d.getFullYear();
+    let mm = d.getMonth() + 1;
+    let dd = d.getDate();
+    let hh = d.getHours();
+    let mn = d.getMinutes();
+    let ss = d.getSeconds();
+    return yy + "/" + mm + "/" + dd + " " + hh + ":" + mn + ":" + ss;
+  };
+
 /**
  * funcion que determina sobre cual opcion selecciona el usuario
  * para saber sobre cual opcion se hace click se llama la clase class="item" del html
@@ -187,6 +194,7 @@ const waetherApi = async (_usr, _dev, _ul, _apky) => {
 /**
  * @param {*} _option
  * funcion para la opcion que escoge el usuario
+ * async para promesas de la libreria sweetAlert
  */
 const userChoose = function (option) {
   switch (option) {
@@ -201,7 +209,7 @@ const userChoose = function (option) {
        * funcion waetherApi() para consumir el api del clima, y actulizar el valor de temp
        ******************************************************************************/
       cleanTable();
-      agregarUsuario();
+      agregarUsuarioDom();
       devices = JSON.parse(localStorage.getItem("UserDevices"));
 
       formulario.addEventListener("submit", (e) => {
@@ -280,6 +288,7 @@ const userChoose = function (option) {
           timer: 1500,
         });
       } else {
+        devices = [];
         showTableUsersDevices();
       }
       break;
@@ -288,25 +297,48 @@ const userChoose = function (option) {
       /******************************************************************************
        * Actulizar
        * funcion cleanTable(), limpia el DOM la lista  de usuarios
+       * DOM para mostrar el formulario que se actulizara updateDispositivoDom()
+       * evento addEventListener para capturar la informacion del formulario dispositivos
+       * leer el local storage para obtener la informacion de los devices 
        ******************************************************************************/
       cleanTable();
+      updateDispositivoDom();
 
-      console.log("ingrese el serial del dipositivo a actulizar: ");
-      numberSerial = prompt("ingrese el serial del dipositivo a actulizar: ");
+      formulario.addEventListener("submit", (e) => {
+        e.preventDefault();
+        devices = JSON.parse(localStorage.getItem("UserDevices"));
+        let numberSerial = document.getElementById("numberSerial").value;
+        let description = document.getElementById("city").value;
+        let state = document.getElementById("stateOption").value;
+        //console.log(user);
+        //console.log(numberSerial);
+        //console.log(description);
+        //console.log(state);
 
-      _showsearchDevicesByUser = searchDevicesByUser(user, numberSerial);
-
-      if (_showsearchDevicesByUser != true) {
-        console.log("por favor, verifique el serial");
-        alert("por favor, verifique el serial");
-      } else {
-        description = prompt("ingrese una descripcion ");
-        state = prompt("ingrese un estado valido on / off");
-
-        updateDeviceByUser(user, numberSerial, description, state, userDate()); // enviar fecha
-        alert("actualizando ...");
-        console.log("actualizando ...");
-      }
+        _showsearchDevicesByUser = searchDevicesByUser(user, numberSerial, devices);
+        if (_showsearchDevicesByUser && numberSerial != "" && description != "") {
+          updateDeviceByUser(user, numberSerial, description, state, userDate()); // enviar fecha
+          cleanTable();
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Dispositivo Actulizado!",
+            text: "consulte el listado de dispositivos",
+            showConfirmButton: false,
+            timer: 2000
+          });   
+        }
+        else{
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Ha ocurrido un error!",
+            text: "intentelo nuevamente",
+            showConfirmButton: false,
+            timer: 2000
+          });   
+        }
+      });
       break;
 
     case 4:
@@ -336,7 +368,7 @@ const userChoose = function (option) {
         alert("dispositivo eliminado, verifique la lista de dipositivos");
       }
       break;
-
+    /** 
     case 5:
       alert("Hasta pronto..");
       console.log("Hasta pronto..");
@@ -345,6 +377,7 @@ const userChoose = function (option) {
     default:
       alert("ingrese una opcion correcta");
       break;
+      */
   }
 };
 
