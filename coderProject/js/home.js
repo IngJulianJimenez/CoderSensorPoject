@@ -10,10 +10,10 @@
  * actualizar el valor temp del array, con la repuesta del api clima °C
  * se sobre escribe el json UserDevices en el localStorage
  */
-function searchDevicesByUser(_usr, _nbrSrl,_dev) {
+function searchDevicesByUser(_usr, _nbrSrl, _dev) {
   let userOwner;
   let userSerial;
-  let exist = false;  
+  let exist = false;
   for (let index = 0; index < _dev.length; index++) {
     userOwner = _dev[index].owner;
     userSerial = _dev[index].serial;
@@ -33,7 +33,7 @@ function searchDevicesByUser(_usr, _nbrSrl,_dev) {
  * si la cosulta es verdadera
  * se ingresa el serial y se borra del array devices
  */
-const deleteDeviceByUser = function (_numberSerial,_dev) {
+const deleteDeviceByUser = function (_numberSerial, _dev) {
   _dev = _dev.filter((_devices) => _devices.serial != _numberSerial);
   localStorage.setItem("UserDevices", JSON.stringify(_dev)); // guardar en el local storage el array devices
 };
@@ -125,20 +125,20 @@ const fnGeneradorNumeros = () => {
   return (Math.random() * 100).toFixed(2);
 };
 
-  //funcion generador de la fecha actual
-  let userDate = function () {
-    let d = new Date();
-    //console.log(d);
-    //console.log(d.getDay());
+//funcion generador de la fecha actual
+let userDate = function () {
+  let d = new Date();
+  //console.log(d);
+  //console.log(d.getDay());
 
-    let yy = d.getFullYear();
-    let mm = d.getMonth() + 1;
-    let dd = d.getDate();
-    let hh = d.getHours();
-    let mn = d.getMinutes();
-    let ss = d.getSeconds();
-    return yy + "/" + mm + "/" + dd + " " + hh + ":" + mn + ":" + ss;
-  };
+  let yy = d.getFullYear();
+  let mm = d.getMonth() + 1;
+  let dd = d.getDate();
+  let hh = d.getHours();
+  let mn = d.getMinutes();
+  let ss = d.getSeconds();
+  return yy + "/" + mm + "/" + dd + " " + hh + ":" + mn + ":" + ss;
+};
 
 /**
  * funcion que determina sobre cual opcion selecciona el usuario
@@ -195,7 +195,7 @@ const waetherApi = async (_usr, _dev, _ul, _apky) => {
  * funcion para la opcion que escoge el usuario
  * async para promesas de la libreria sweetAlert
  */
-const userChoose = function (option) {
+const userChoose = async function (option) {
   switch (option) {
     case 1:
       /******************************************************************************
@@ -298,7 +298,7 @@ const userChoose = function (option) {
        * funcion cleanTable(), limpia el DOM la lista  de usuarios
        * DOM para mostrar el formulario que se actulizara updateDispositivoDom()
        * evento addEventListener para capturar la informacion del formulario dispositivos
-       * leer el local storage para obtener la informacion de los devices 
+       * leer el local storage para obtener la informacion de los devices
        ******************************************************************************/
       cleanTable();
       updateDispositivoDom();
@@ -314,31 +314,44 @@ const userChoose = function (option) {
         //console.log(description);
         //console.log(state);
 
-        _showsearchDevicesByUser = searchDevicesByUser(user, numberSerial, devices);
-        if (_showsearchDevicesByUser && numberSerial != "" && description != "") {
-          updateDeviceByUser(user, numberSerial, description, state, userDate()); // enviar fecha
+        _showsearchDevicesByUser = searchDevicesByUser(
+          user,
+          numberSerial,
+          devices
+        );
+        if (
+          _showsearchDevicesByUser &&
+          numberSerial != "" &&
+          description != ""
+        ) {
+          updateDeviceByUser(
+            user,
+            numberSerial,
+            description,
+            state,
+            userDate()
+          ); // enviar fecha
           waetherApi(user, devices, url, appkey);
 
           cleanTable();
-          devices=[];
+          devices = [];
           Swal.fire({
             position: "center",
             icon: "success",
             title: "Dispositivo Actulizado!",
             text: "consulte el listado de dispositivos",
             showConfirmButton: false,
-            timer: 2000
-          });   
-        }
-        else{
+            timer: 2000,
+          });
+        } else {
           Swal.fire({
             position: "center",
             icon: "error",
             title: "Ha ocurrido un error!",
             text: "intentelo nuevamente",
             showConfirmButton: false,
-            timer: 2000
-          });   
+            timer: 2000,
+          });
         }
       });
       break;
@@ -349,21 +362,55 @@ const userChoose = function (option) {
        *  funcion cleanTable(), limpia el DOM la lista  de usuarios
        ******************************************************************************/
       cleanTable();
-
-      console.log("ingrese el serial del dipositivo a eliminar: ");
-      numberSerial = prompt("ingrese el serial del dipositivo a eliminar: ");
       devices = JSON.parse(localStorage.getItem("UserDevices"));
 
-      _showsearchDevicesByUser = searchDevicesByUser(user, numberSerial,devices);
-      if (_showsearchDevicesByUser != true) {
-        //console.log("ha ocurrido un error, verifique el serial a borrar");
-        alert("ha ocurrido un error, verifique el serial a borrar");
-      } else {
-        deleteDeviceByUser(numberSerial,devices);
-        //console.log("dispositivo eliminado, verifique la lista de dipositivos");
-        alert("dispositivo eliminado, verifique la lista de dipositivos");
-        devices=[];
-      }
+      Swal.fire({
+        title: "Está a punto de borrar el dispositivo",
+        text: "¿Desea continuar?",
+        icon: "warning",
+        showDenyButton: true,
+        confirmButtonColor: "#2ac42f",
+        denyButtonColor: "#d33",
+        confirmButtonText: "Si, continuar!",
+      }).then(async (result) => { //async para promesas, ingresar el serial
+
+        if (result.isConfirmed) {
+          const { value: numberSerial } = await Swal.fire({
+            input: "textarea",
+            inputLabel: "Message",
+            inputPlaceholder: "Type your message here...",
+            inputAttributes: {
+              "aria-label": "Type your message here",
+            },
+            showCancelButton: true,
+          });
+
+          if (numberSerial) { //eliminar serial
+            if (searchDevicesByUser(user, numberSerial, devices)) {
+              deleteDeviceByUser(numberSerial, devices);
+              devices = [];
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Dispositivo eliminado!",
+                text: "Consulte la lista de dipositivos",
+                showConfirmButton: false,
+                timer: 2000,
+              });
+
+            }else { //mensaje de error opr defecto
+              Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Ha ocurrido un error!",
+                text: "intentelo nuevamente",
+                showConfirmButton: false,
+                timer: 2000,
+              });
+            }
+          }
+        }
+      });
       break;
   }
 };
