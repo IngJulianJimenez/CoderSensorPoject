@@ -10,7 +10,9 @@ Realizar una portal web que permita a varios usuarios de forma interactiva la le
 
 > ingresar nuevo dispositivo
 
-> ver dispositivo
+> ver listado dispositivos
+
+> actulizar dispositivo
 
 > borrar dispositivo
 
@@ -24,24 +26,20 @@ Realizar una portal web que permita a varios usuarios de forma interactiva la le
 
 > serial
 
-> descripción
+> ciudad
 
 - Para agregar nuevos dispositivos por defecto se asigna el usuario
 
 - Los dispositivos agregados su estado inicial es **Off**.
+- se consume el **Weather API** para actulizar la temperatura de cada dispositivo en °C
 
 ## Datos de prueba
 
-usuario:
->userb
+|usuario         |password                       |   |
+|----------------|-------------------------------|---|
+|usera           |Co123@                         |   |
+|userb           |Co123#                         |   |
 
-contraseña:
->Co123#
-
-serial:
->AB78
-
->AB34
 
 # Alcance segunda entrega:
 
@@ -60,5 +58,12 @@ serial:
 - Manejo de DOM
 - Manejo de eventos
 - Uso de local Storage
+
+# Alcance cuarta entrega:
+
+- Manejo de pormesas
+- cosnumo de apis
+- fetch y archivo json
+- libreria sweet alert
 
 

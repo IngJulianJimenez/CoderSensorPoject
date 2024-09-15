@@ -3,30 +3,22 @@
  * @param {*} _user
  * @param {*} _numberSerial
  * @returns resultArray
- * se recorre el arreglo de objetos devices con un for;
- * el objeto completo y sus atributos se guardan en userDevice, por cada ciclo del for;
- * se accede al la propiedad del objeto en cada ciclo del for[index], con userOwner=userDevice.owner y userSerial = userDevice.serial ;
- * comparar si el valor de user que hace login y el serial hacen match en el array devices con userOwner == _user y el serial;
- * si la comparacion es valida exist = true;
- * si la comparacion no es valida exist = false;
+ * recorrer el array devices obtener
+ * comparar userOwner con el valor de entrada
+ * comparar userSerial con el valor de entrada
+ * si hace match el usuario el dispositvo existe
+ * actualizar el valor temp del array, con la repuesta del api clima °C
+ * se sobre escribe el json UserDevices en el localStorage
  */
-function searchDevicesByUser(_user, _numberSerial) {
-  let userDevice;
+function searchDevicesByUser(_usr, _nbrSrl, _dev) {
   let userOwner;
   let userSerial;
   let exist = false;
-
-  for (let index = 0; index < devices.length; index++) {
-    userDevice = devices[index];
-    //console.log(userDevice);
-    //console.log(devices[0]);
-
-    userOwner = userDevice.owner;
-    userSerial = userDevice.serial;
+  for (let index = 0; index < _dev.length; index++) {
+    userOwner = _dev[index].owner;
+    userSerial = _dev[index].serial;
     //console.log("x:"+userOwner);
-
-    if (userOwner == _user && userSerial == _numberSerial) {
-      //
+    if (userOwner == _usr && userSerial == _nbrSrl) {
       //console.log(userDevice);
       exist = true;
     }
@@ -38,11 +30,12 @@ function searchDevicesByUser(_user, _numberSerial) {
  * funcion anonima
  * @param {*} _numberSerial
  * previamente se consulta si el serial existe
- * si la cinsulta es verdadera
+ * si la cosulta es verdadera
  * se ingresa el serial y se borra del array devices
  */
-const deleteDeviceByUser = function (_numberSerial) {
-  devices = devices.filter((devices) => devices.serial != _numberSerial);
+const deleteDeviceByUser = function (_numberSerial, _dev) {
+  _dev = _dev.filter((_devices) => _devices.serial != _numberSerial);
+  localStorage.setItem("UserDevices", JSON.stringify(_dev)); // guardar en el local storage el array devices
 };
 
 /**
@@ -56,6 +49,8 @@ const deleteDeviceByUser = function (_numberSerial) {
  * description
  * state
  * userDate() actualizar fecha
+ * recorrer el array devices[], si hace match reemplazar las propiedades del objeto con los datos de entrada
+ * guadar en local storage
  */
 const updateDeviceByUser = function (
   _user,
@@ -64,56 +59,46 @@ const updateDeviceByUser = function (
   _state,
   _funcion
 ) {
-  let userDevice;
   let userOwner;
   let userSerial;
 
   for (let index = 0; index < devices.length; index++) {
     userDevice = devices[index];
 
-    userOwner = userDevice.owner;
-    userSerial = userDevice.serial;
+    userOwner = devices[index].owner;
+    userSerial = devices[index].serial;
 
     if (userOwner == _user && userSerial == _numberSerial) {
-      userDevice.date = _funcion; //actualizar fecha
-      userDevice.description = _description;
-      userDevice.estate = _state;
+      devices[index].date = _funcion; //actualizar fecha
+      devices[index].description = _description;
+      devices[index].estate = _state;
     }
+    localStorage.setItem("UserDevices", JSON.stringify(devices[index])); // guardar en el local storage
   }
 };
 
 /**
  * funcion clasica
- * @param {_user} _user
+ * @param {_usr} _user
  * @returns resultArray
- * se recorre el arreglo de objetos devices con un for;
- * el objeto completo y sustributos se guardan en userDevice, por cada ciclo del for;
- * se accede al la propiedad del objeto en cada ciclo del for con userOwner=userDevice.owner;
- * comparar si el valor de la propiedad es igual al user que hace login userOwner == _user;
- * concatenar el resultado en una arreglo vacio resultArray;
- * fnGeneradorNumeros() genera un numero aleatorio  para simular la tempertura
+ * recorrer el array devices obtener la propiedad _dev[index].owner
+ * comparar el userOwner del array con el valor de entrada _usr
+ * si hace match el objeto completo se guarda en un nuevo resultArray
+ * se sobre escribe el json UserDevices en el localStorage con el valor del resultArray
  */
-function showDevicesByUser(_user) {
-  let userDevice;
+function showDevicesByUser(_usr, _dev) {
   let userOwner;
   let resultArray = [];
-
-  for (let index = 0; index < devices.length; index++) {
-    userDevice = devices[index];
-    //console.log(userDevice);
-    //console.log(devices[0]);
-
-    userOwner = userDevice.owner;
+  for (let index = 0; index < _dev.length; index++) {
+    userOwner = _dev[index].owner;
     //console.log("x:"+userOwner);
-
-    if (userOwner == _user) {
-      userDevice.temp = fnGeneradorNumeros();
-      //console.log(userDevice.temp);
-      //console.log(userDevice);
-      resultArray.push(userDevice);
+    if (userOwner == _usr) {
+      //console.log(_dev[index]);
+      resultArray.push(_dev[index]);
     }
+    localStorage.setItem("UserDevices", JSON.stringify(resultArray));
   }
-  //console.log(answerArray);
+  //console.log(resultArray);
   return resultArray;
 }
 
@@ -125,11 +110,13 @@ function showDevicesByUser(_user) {
  * @param {*} _al agregar es off
  */
 class addDevices {
-  constructor(_owner, _serial, _description, _estate) {
+  constructor(_owner, _serial, _description, _estate, _date, _temp) {
     this.owner = _owner;
     this.serial = _serial;
     this.description = _description;
     this.estate = _estate;
+    this.date = _date;
+    this.temp = _temp;
   }
 }
 
@@ -138,80 +125,147 @@ const fnGeneradorNumeros = () => {
   return (Math.random() * 100).toFixed(2);
 };
 
+//funcion generador de la fecha actual
+let userDate = function () {
+  let d = new Date();
+  //console.log(d);
+  //console.log(d.getDay());
+
+  let yy = d.getFullYear();
+  let mm = d.getMonth() + 1;
+  let dd = d.getDate();
+  let hh = d.getHours();
+  let mn = d.getMinutes();
+  let ss = d.getSeconds();
+  return yy + "/" + mm + "/" + dd + " " + hh + ":" + mn + ":" + ss;
+};
+
 /**
- * funcion que determina sobre cual opcion hace click el usuario
- * Iteramos sobre el array de elementos options
- * Seleccionamos todos los elementos con la clase "item"
- * Añadimos el evento click a cada elemento
- * Mostar un mensaje sobre la opcion escogida
- * implementar validacion de  1 a 5
+ * funcion que determina sobre cual opcion selecciona el usuario
+ * para saber sobre cual opcion se hace click se llama la clase class="item" del html
+ * el evento addEventListener toma los datos de la posicion donde se hace click
+ * la funcion userChoose la opcion donde se hace click (valor entero)
+ *
  */
 function UserMenuClick() {
-  const options = document.querySelectorAll(".item");
-  options.forEach((item, value) => {
+  const optionClick = document.querySelectorAll(".item");
+  optionClick.forEach((item, value) => {
     item.addEventListener("click", function () {
       //alert('Has Seleccionado la opcion ' + item.innerHTML +" " +`${parseInt(value)}` );
-      alert("Has Seleccionado " + item.innerHTML);
+      //alert("Has Seleccionado " + item.innerHTML);
       //console.log(parseInt(value));
-      userChose(parseInt(value));
+      userChoose(parseInt(value));
     });
   });
 }
 
 /**
- * fucncion para limpiar la tabla
+ * @param {*} _usr
+ * @param {*} _dev
+ * @param {*} _ul
+ * @param {*} _apky
+ * recorrer el array devices obtener la ciudad y el usuario
+ * comparar el usuario del array con el valor de entrada
+ * si hace match el usuario, consumir el api clima con el valor de ciudad
+ * actualizar el valor temp del array, con la repuesta del api clima °C
+ * guardar el resultado en un nuevo array
+ * se sobre escribe el json UserDevices en el localStorage
  */
-function cleanTable() {
-  headerTableDevices = document.getElementById("headerTableDevices");
-  TableDevices = document.getElementById("TableDevices");
-
-  headerTableDevices.innerHTML = "";
-  TableDevices.innerHTML = "";
-}
+const waetherApi = async (_usr, _dev, _ul, _apky) => {
+  let userCity;
+  let userOwner;
+  let resultArray = [];
+  for (let index = 0; index < _dev.length; index++) {
+    userOwner = _dev[index].owner;
+    userCity = _dev[index].description;
+    if (userOwner == _usr) {
+      const respuesta = await fetch(
+        `https://${_ul}?q=${userCity}&appid=${_apky}&units=metric`
+      );
+      const data = await respuesta.json();
+      _dev[index].temp = data?.main?.temp;
+      resultArray.push(_dev[index]);
+    }
+    localStorage.setItem("UserDevices", JSON.stringify(resultArray));
+  }
+};
 
 /**
- *
  * @param {*} _option
+ * funcion para la opcion que escoge el usuario
+ * async para promesas de la libreria sweetAlert
  */
-const userChose = function (option) {
+const userChoose = async function (option) {
   switch (option) {
     case 1:
       /******************************************************************************
-       * agregar un nuevo dispositivo
-       * definir un objeto
-       * agregarlo al arreglo de objetos devices,con devices.push(newDevice);
-       * funcion cleanTable(), limpia el DOM la lista  de usuarios
+       * funcion cleanTable(), limpia el DOM
+       * DOM formulario para agregar nuevos dispositivos agregarUsuario()
+       * leer  el local storage  y guardar la data de  UserDevices en el array devices
+       * funcion evento formulario
+       * agregar un nuevo dispositivo, instanciar un objeto addDevices()
+       * agregar el nuevo dispositivo showDevicesByUser();
+       * funcion waetherApi() para consumir el api del clima, y actulizar el valor de temp
        ******************************************************************************/
       cleanTable();
+      agregarUsuarioDom();
+      devices = JSON.parse(localStorage.getItem("UserDevices"));
 
-      serial = prompt("ingrese el serial del dipositivo: ");
-      description = prompt("ingrese una descripcion ");
+      formulario.addEventListener("submit", (e) => {
+        e.preventDefault();
+        let serial = document.getElementById("serial").value;
+        let description = document.getElementById("description").value;
+        //console.log(typeof(serial)+serial);
+        //console.log(typeof(description)+description);
 
-      //instanciar objeto y agregar objeto
-      /** 
-      const newDevice = new addDevices(user, serial, description, state);
-      devices.push(newDevice);
-      console.log("dispositivo agregado consulte desde el menu de opciones: " + newDevice);
-      alert("dispositivo agregado consulte desde el menu de opciones");
-      */
-      //otra forma de agregar mas pro
-      if (serial != null && description != null) {
-        devices.push(new addDevices(user, serial, description, state));
-        console.log(
-          "dispositivo agregado consulte desde el menu de opciones: "
-        );
+        //instanciar objeto y agregar objeto
+        /** 
+        const newDevice = new addDevices(user, serial, description, state);
+        devices.push(newDevice);
+        console.log("dispositivo agregado consulte desde el menu de opciones: " + newDevice);
         alert("dispositivo agregado consulte desde el menu de opciones");
-      }
+        */
+        //otra forma de agregar mas pro
+        if (serial != "" && description != "") {
+          devices.push(
+            new addDevices(
+              user,
+              serial,
+              description,
+              (state = "off"),
+              (date = ""),
+              (temp = null)
+            )
+          );
 
+          showDevicesByUser(user, devices);
+          waetherApi(user, devices, url, appkey);
+          cleanTable();
+
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Se ha guardado la información.",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        } else {
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Ha ocurrido un error, inténtelo nuevamente.",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+      });
       break;
 
     case 2:
       // funcion clasica
       /******************************************************************************
        * funcion cleanTable(), limpia el DOM la lista  de usuarios
-       * limpiar el local storage
-       * limpiar el array devicesLs de almacenamiento del local storage
-       * mostrar por El DOM la lista de  devices por usuario.
+       * mostrar por El DOM la lista de  devices por usuario showTableUsersDevices();
        *
        * mostrar dispositivos
        * se recorre el arreglo de objetos respuesta de la funcion con un for;
@@ -222,77 +276,84 @@ const userChose = function (option) {
        * por ultimo guaraar en el local storage  el Json
        ******************************************************************************/
       cleanTable();
-      localStorage.removeItem("UserDevices");
-      devicesLs = [];
-
-      _showDevicesByUser = showDevicesByUser(user);
-
+      devices = JSON.parse(localStorage.getItem("UserDevices"));
+      _showDevicesByUser = showDevicesByUser(user, devices);
       if (_showDevicesByUser <= 0) {
-        console.log("usted no cuenta con dispositivos");
-        alert("usted no cuenta con dispositivos");
-      } else {
-        headerTableDevices = document.getElementById("headerTableDevices");
-        thDevices = document.createElement("tr");
-
-        thDevices.innerHTML = `
-        <th scope="col">#</th>
-        <th scope="col">Owner</th>
-        <th scope="col">Serial</th>
-        <th scope="col">Description</th>
-        <th scope="col">State</th>
-        <th scope="col">Date</th>
-        <th scope="col">Temp</th>
-        `;
-        headerTableDevices.append(thDevices);
-
-        _showDevicesByUser.forEach((element) => {
-          lastArrayShow = element;
-          //console.log(lastArrayShow); array con el resultado por consola
-
-          TableDevices = document.getElementById("TableDevices");
-          thTableDevices = document.createElement("tr");
-
-          thTableDevices.innerHTML = `
-        <th scope="row">1</th>
-        <td>${lastArrayShow.owner}</td>
-        <td>${lastArrayShow.serial}</td>
-        <td>${lastArrayShow.description}</td>
-        <td>${lastArrayShow.estate}</td>
-        <td>${lastArrayShow.date}</td>
-         <td>${lastArrayShow.temp}</td>
-        `;
-          TableDevices.append(thTableDevices);
-
-          devicesLs.push(lastArrayShow);
-          localStorage.setItem("UserDevices", JSON.stringify(devicesLs));
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "usted no cuenta con dispositivos!",
+          showConfirmButton: false,
+          timer: 1500,
         });
+      } else {
+        devices = [];
+        showTableUsersDevices();
       }
-      //console.log("prueba: "+ JSON.stringify(devicesLs));
       break;
 
     case 3:
       /******************************************************************************
        * Actulizar
        * funcion cleanTable(), limpia el DOM la lista  de usuarios
+       * DOM para mostrar el formulario que se actulizara updateDispositivoDom()
+       * evento addEventListener para capturar la informacion del formulario dispositivos
+       * leer el local storage para obtener la informacion de los devices
        ******************************************************************************/
       cleanTable();
+      updateDispositivoDom();
 
-      console.log("ingrese el serial del dipositivo a actulizar: ");
-      numberSerial = prompt("ingrese el serial del dipositivo a actulizar: ");
+      formulario.addEventListener("submit", (e) => {
+        e.preventDefault();
+        devices = JSON.parse(localStorage.getItem("UserDevices"));
+        let numberSerial = document.getElementById("numberSerial").value;
+        let description = document.getElementById("city").value;
+        let state = document.getElementById("stateOption").value;
+        //console.log(user);
+        //console.log(numberSerial);
+        //console.log(description);
+        //console.log(state);
 
-      _showsearchDevicesByUser = searchDevicesByUser(user, numberSerial);
+        _showsearchDevicesByUser = searchDevicesByUser(
+          user,
+          numberSerial,
+          devices
+        );
+        if (
+          _showsearchDevicesByUser &&
+          numberSerial != "" &&
+          description != ""
+        ) {
+          updateDeviceByUser(
+            user,
+            numberSerial,
+            description,
+            state,
+            userDate()
+          ); // enviar fecha
+          waetherApi(user, devices, url, appkey);
 
-      if (_showsearchDevicesByUser != true) {
-        console.log("por favor, verifique el serial");
-        alert("por favor, verifique el serial");
-      } else {
-        description = prompt("ingrese una descripcion ");
-        state = prompt("ingrese un estado valido on / off");
-
-        updateDeviceByUser(user, numberSerial, description, state, userDate()); // enviar fecha
-        alert("actualizando ...");
-        console.log("actualizando ...");
-      }
+          cleanTable();
+          devices = [];
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Dispositivo Actulizado!",
+            text: "consulte el listado de dispositivos",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        } else {
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Ha ocurrido un error!",
+            text: "intentelo nuevamente",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
+      });
       break;
 
     case 4:
@@ -301,35 +362,55 @@ const userChose = function (option) {
        *  funcion cleanTable(), limpia el DOM la lista  de usuarios
        ******************************************************************************/
       cleanTable();
+      devices = JSON.parse(localStorage.getItem("UserDevices"));
 
-      console.log("ingrese el serial del dipositivo a eliminar: ");
-      numberSerial = prompt("ingrese el serial del dipositivo a eliminar: ");
+      Swal.fire({
+        title: "Está a punto de borrar el dispositivo",
+        text: "¿Desea continuar?",
+        icon: "warning",
+        showDenyButton: true,
+        confirmButtonColor: "#2ac42f",
+        denyButtonColor: "#d33",
+        confirmButtonText: "Si, continuar!",
+      }).then(async (result) => { //async para promesas, ingresar el serial
 
-      // funcion clasica
-      /**
-       * se recorre el arreglo de objetos respuesta de la funcion con un for;
-       * se muestra un mensaje si se borro el dispositivo
-       * el valor de retorno solo es para determinar si hace match el serial y el usuario
-       */
+        if (result.isConfirmed) {
+          const { value: numberSerial } = await Swal.fire({
+            input: "textarea",
+            inputLabel: "Message",
+            inputPlaceholder: "Type your message here...",
+            inputAttributes: {
+              "aria-label": "Type your message here",
+            },
+            showCancelButton: true,
+          });
 
-      _showsearchDevicesByUser = searchDevicesByUser(user, numberSerial);
-      if (_showsearchDevicesByUser != true) {
-        console.log("ha ocurrido un error, verifique el serial a borrar");
-        alert("ha ocurrido un error, verifique el serial a borrar");
-      } else {
-        deleteDeviceByUser(numberSerial);
-        console.log("dispositivo eliminado, verifique la lista de dipositivos");
-        alert("dispositivo eliminado, verifique la lista de dipositivos");
-      }
-      break;
+          if (numberSerial) { //eliminar serial
+            if (searchDevicesByUser(user, numberSerial, devices)) {
+              deleteDeviceByUser(numberSerial, devices);
+              devices = [];
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Dispositivo eliminado!",
+                text: "Consulte la lista de dipositivos",
+                showConfirmButton: false,
+                timer: 2000,
+              });
 
-    case 5:
-      alert("Hasta pronto..");
-      console.log("Hasta pronto..");
-      break;
-
-    default:
-      alert("ingrese una opcion correcta");
+            }else { //mensaje de error opr defecto
+              Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Ha ocurrido un error!",
+                text: "intentelo nuevamente",
+                showConfirmButton: false,
+                timer: 2000,
+              });
+            }
+          }
+        }
+      });
       break;
   }
 };
@@ -337,7 +418,8 @@ const userChose = function (option) {
 /******************************************************************************
  * declaracion de varaibles
  ******************************************************************************/
-
+let devices = []; // leer la informacion del local storage
+/**
 let users = [
   {
     owner: "usera",
@@ -395,66 +477,64 @@ let devices = [
     temp: "",
   },
 ];
+*/
 
 const options = [
   '<div class="item"><b> Seleccione una opción del menú: </b></div>',
-  '<div class="item">1 para ingresar nuevo dispositivos </div>',
-  '<div class="item">2 mostrar dispositivos </div>',
-  '<div class="item">3 actulizar </div>',
-  '<div class="item">4 borrar </div>',
-  '<div class="item">5 para salir </div>',
+  '<div class="item">Ingresar dispositivo. </div>',
+  '<div class="item">Mostrar lista dispositivos. </div>',
+  '<div class="item">Actaulizar lista dispositivos. </div>',
+  '<div class="item">Borrar dispositivo. </div>',
 ];
 
 // credenciales
 let user;
+let imagen;
 let option;
 
 //actulizar dispositivo
 let numberSerial = 0;
 let _showsearchDevicesByUser;
 
+//agregar dispositivo
 let state = "off";
 let serial;
 let description;
+let date;
+let temp;
 
 //mostrar dispositivos
 let _showDevicesByUser;
 let lastArrayShow;
 let x;
 
-//DOM tabla mostrar dipositivos
-let headerTableDevices;
-let thDevices;
-let TableDevices;
-let thTableDevices;
-
-//guardar en el localStorage
-let devicesLs = [];
+//varaibles consumir el Api
+const url = "api.openweathermap.org/data/2.5/weather";
+let appkey = "5f5d115d54af7d2c880aee2f2ea144bd";
+let city;
 
 /******************************************************************************
  * inicio
- * Verificar credenciales
+ * leer data en el local storage
  ******************************************************************************/
 user = localStorage.getItem("user");
+imagen = localStorage.getItem("imagen");
 
 if (user != null) {
   //alert("Bienvenido.. ! " + user);
 
   /******************************************************************************
-   * DOM
-   * mostrar en el front
-   * usuario que hace login
+   * leer local storage y pasear el json a un array de objetos devices
+   * consumir el api del clima waetherApi() y actualizar el valor temp de devices
+   *
    * crear el menu de opciones iterando sobre el array options
-   * saber sobre cual opcion hace click UserMenuClick();
-   * funcion para el footer creador y fecha CreateAndDateFooter()
+   * funcion UserMenuClick(), spara saber sobre cual opcion se hace click
+   * borrar el array devices
    ******************************************************************************/
-  CreateAndDateFooter();
-  let frUser = document.getElementById("user");
-  let frText_2 = document.createElement("p");
-  frText_2.innerHTML = `
-  Bienvenido!: <b>${user.toUpperCase()}</b> 
-  `;
-  frUser.append(frText_2);
+
+  devices = JSON.parse(localStorage.getItem("UserDevices"));
+  waetherApi(user, devices, url, appkey);
+  devices = [];
 
   let frMenuOption = document.getElementById("MenuOption");
   for (const op of options) {
@@ -462,8 +542,8 @@ if (user != null) {
     ul.innerHTML = `<li class="list-group-item">${op}</li>`;
     frMenuOption.append(ul);
   }
-
   UserMenuClick();
 } else {
-  alert("Please verify your credentials");
+  //alert("Please verify your credentials");
+  window.location.href = "404" + ".html";
 }

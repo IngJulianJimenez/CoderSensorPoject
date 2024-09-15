@@ -1,0 +1,42 @@
+[
+    {
+      "owner": "usera",
+      "serial": "AB12",
+      "description": "New York",
+      "estate": "off",
+      "date": "",
+      "temp": ""
+    },
+    {
+      "owner": "userb",
+      "serial": "AB34",
+      "description": "Bogota",
+      "estate": "off",
+      "date": "",
+      "temp": ""
+    },
+    {
+      "owner": "usera",
+      "serial": "AB56",
+      "description": "Buenos Aires",
+      "estate": "off",
+      "date": "",
+      "temp": ""
+    },
+    {
+      "owner": "userb",
+      "serial": "AB78",
+      "description": "Barranquilla",
+      "estate": "off",
+      "date": "",
+      "temp": ""
+    },
+    {
+      "owner": "usera",
+      "serial": "CD12",
+      "description": "London",
+      "estate": "off",
+      "date": "",
+      "temp": ""
+    }
+]
