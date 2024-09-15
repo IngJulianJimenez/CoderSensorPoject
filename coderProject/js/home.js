@@ -33,9 +33,9 @@ function searchDevicesByUser(_usr, _nbrSrl,_dev) {
  * si la cosulta es verdadera
  * se ingresa el serial y se borra del array devices
  */
-const deleteDeviceByUser = function (_numberSerial) {
-  devices = devices.filter((devices) => devices.serial != _numberSerial);
-  localStorage.setItem("UserDevices", JSON.stringify(devices)); // guardar en el local storage el array devices
+const deleteDeviceByUser = function (_numberSerial,_dev) {
+  _dev = _dev.filter((_devices) => _devices.serial != _numberSerial);
+  localStorage.setItem("UserDevices", JSON.stringify(_dev)); // guardar en el local storage el array devices
 };
 
 /**
@@ -352,34 +352,19 @@ const userChoose = function (option) {
 
       console.log("ingrese el serial del dipositivo a eliminar: ");
       numberSerial = prompt("ingrese el serial del dipositivo a eliminar: ");
+      devices = JSON.parse(localStorage.getItem("UserDevices"));
 
-      // funcion clasica
-      /**
-       * se recorre el arreglo de objetos respuesta de la funcion con un for;
-       * se muestra un mensaje si se borro el dispositivo
-       * el valor de retorno solo es para determinar si hace match el serial y el usuario
-       */
-
-      _showsearchDevicesByUser = searchDevicesByUser(user, numberSerial);
+      _showsearchDevicesByUser = searchDevicesByUser(user, numberSerial,devices);
       if (_showsearchDevicesByUser != true) {
-        console.log("ha ocurrido un error, verifique el serial a borrar");
+        //console.log("ha ocurrido un error, verifique el serial a borrar");
         alert("ha ocurrido un error, verifique el serial a borrar");
       } else {
-        deleteDeviceByUser(numberSerial);
-        console.log("dispositivo eliminado, verifique la lista de dipositivos");
+        deleteDeviceByUser(numberSerial,devices);
+        //console.log("dispositivo eliminado, verifique la lista de dipositivos");
         alert("dispositivo eliminado, verifique la lista de dipositivos");
+        devices=[];
       }
       break;
-    /** 
-    case 5:
-      alert("Hasta pronto..");
-      console.log("Hasta pronto..");
-      break;
-
-    default:
-      alert("ingrese una opcion correcta");
-      break;
-      */
   }
 };
 
